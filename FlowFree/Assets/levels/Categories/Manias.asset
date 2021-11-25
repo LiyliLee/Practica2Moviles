@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25abce37de98d04d9c3edb2d94b6938, type: 3}
+  m_Name: Manias
+  m_EditorClassIdentifier: 
+  packs:
+  - {fileID: 11400000, guid: 8b7b19e6bf7823b47a43b9b4209d6836, type: 2}
+  - {fileID: 11400000, guid: 2db370dce4b8ea1469eca2240ebc28cb, type: 2}
+  - {fileID: 11400000, guid: 3080abd6d5dc80942a1f39a9a4f456c0, type: 2}
+  - {fileID: 11400000, guid: 3e551f8e331406b45b3c8225e85cdf87, type: 2}
+  - {fileID: 11400000, guid: fa53af24041d4c646894c31659c99722, type: 2}
+  categoryName: Manias
+  color: {r: 1, g: 0, b: 0, a: 0}
