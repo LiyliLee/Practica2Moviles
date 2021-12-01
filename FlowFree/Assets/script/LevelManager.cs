@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    protected struct LevelData
+    public struct LevelData
     {
         public int width, height;
         public int numFlows;
 
-        public List<int>[] solutions_;
-
-        public Vector2[] emptys_;
+        public int[] bridges_;
+        public int[] emptys_;
         public Vector2[] wall_;
+
+        public List<int>[] solutions_;
     }
 
-    public void CreateLevel(TextAsset pack, int levelToPlay)
+    public LevelData CreateLevel(TextAsset pack, int levelToPlay)
     {
-        LevelData levelData;
+        LevelData levelData = new LevelData();
 
         string packText = pack.text;
 
@@ -41,12 +42,48 @@ public class LevelManager : MonoBehaviour
 
         levelData.numFlows = int.Parse(cabecera[3]);
 
-        string[] walls = level[levelData.numFlows].Split(':');
-
-        //Flows
-        for (int i = 0; i < levelData.numFlows; i++)
+        if(cabecera.Length > 4)
         {
-
+            string[] bridges = level[4].Split(':');
+            levelData.bridges_ = new int[bridges.Length];
+            for(int i = 0; i < bridges.Length; i++)
+            {
+                levelData.bridges_[i] = int.Parse(bridges[i]);
+            }
         }
+        if (cabecera.Length > 5)
+        {
+            string[] emptys = level[5].Split(':');
+            levelData.emptys_ = new int[emptys.Length];
+            for (int i = 0; i < emptys.Length; i++)
+            {
+                levelData.emptys_[i] = emptys[i][0] - '0';
+            }
+        }
+        if (cabecera.Length > 6)
+        {
+            string[] walls = level[6].Split(':');
+            levelData.wall_ = new Vector2[walls.Length];
+            for (int i = 0; i < walls.Length; i++)
+            {
+                string[] wallaux = walls[i].Split('|');
+                levelData.wall_[i].x = int.Parse(wallaux[0]);
+                levelData.wall_[i].y = int.Parse(wallaux[1]);
+            }
+        }
+
+        levelData.solutions_ = new List<int>[levelData.numFlows];
+        //Flows
+        for (int i = 1; i <= levelData.numFlows; i++)
+        {
+            string solution = level[i + 1];
+            string[] casillas = solution.Split(',');
+            for(int j = 0; j < casillas.Length;j++)
+            {
+                levelData.solutions_[i - 1].Add(int.Parse(casillas[j]));
+            }
+        }
+
+        return levelData;
     }
 }

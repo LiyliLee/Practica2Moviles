@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public Cell(bool isflow, bool isBridge, bool isEmpty, Color color)
+    public Cell(bool isflow, bool isBridge, bool isEmpty, int color)
     {
         isFlow_ = isflow;
         isBridge_ = isBridge;
@@ -25,7 +25,7 @@ public class Cell : MonoBehaviour
     public GameObject[] paths_ = new GameObject[4];
 
     //0 empty, 1 red, 2 blue, ...
-    private Color color_;
+    private int color_;
 
     void Start()
     {

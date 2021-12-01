@@ -2,53 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Grid : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
-        board_ = new Cell[5, 5];
-
-        board_[0, 0] = new Cell(true, false, false, Color.red);
-        board_[4, 1] = new Cell(true, false, false, Color.red);
-
-        board_[0, 2] = new Cell(true, false, false, Color.blue);
-        board_[3, 1] = new Cell(true, false, false, Color.blue);
-
-        board_[0, 4] = new Cell(true, false, false, Color.green);
-        board_[3, 3] = new Cell(true, false, false, Color.green);
-
-        board_[1, 2] = new Cell(true, false, false, Color.magenta);
-        board_[4, 2] = new Cell(true, false, false, Color.magenta);
-
-        board_[1, 4] = new Cell(true, false, false, Color.yellow);
-        board_[4, 3] = new Cell(true, false, false, Color.yellow);
-
-        for(int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                if(!board_[i, j].isFlow())
-                {
-                    board_[i, j] = new Cell(false, false, false, Color.red);
-                }
-            }
-        }
+        levelManager_ = new LevelManager();
     }
 
-    public void createMap(int width, int height, int level, int numFlows)
+    public void createLevel(TextAsset levelPack, int level)
     {
-        width_ = width;
-        height_ = height;
-        levelNum_ = level;
+        levelData_ = levelManager_.CreateLevel(levelPack, level);
 
-        for(int i = 0; i < numFlows; i++)
+        board_ = new Cell[levelData_.width, levelData_.height];
+
+        //Flows
+        for(int i = 0; i < levelData_.numFlows; i++)
         {
-            
+            int cell1 = levelData_.solutions_[0][0];
+            int cell2 = levelData_.solutions_[0][levelData_.solutions_[0].Count-1];
+            board_[cell1 % width_, width_ - cell1] = new Cell(true, false, false, colors_[i]);
+            board_[cell2 % width_, width_ - cell2] = new Cell(true, false, false, colors_[i]);
+        }
+
+        //Bridges
+        for (int i = 0; i < levelData_.bridges_.Length; i++)
+        {
+            int cell1 = levelData_.bridges_[i];
+            board_[cell1 % width_, width_ - cell1] = new Cell(false, true, false, colors_[i]);
+        }
+
+        //Emptys
+        for (int i = 0; i < levelData_.emptys_.Length; i++)
+        {
+            int cell1 = levelData_.emptys_[i];
+            board_[cell1 % width_, width_ - cell1] = new Cell(false, false, true, colors_[i]);
+        }
+
+        //Walls
+        for (int i = 0; i < levelData_.wall_.Length; i++)
+        {
+            //
+        }
+
+        //Rest
+        for (int i = 0; i < levelData_.wall_.Length; i++)
+        {
+            //
         }
     }
 
     int width_, height_;
     int levelNum_;
     private Cell[,] board_;
+    private LevelManager levelManager_;
+    private LevelManager.LevelData levelData_;
+
+    private int[] colors_ = {0xFF0000, 0x008D00, 0x0C29FE, 0xEAE000,
+        0xFB8900, 0x00FFFF, 0xFF0AC9, 0xA52A2A, 0x800080, 0xFFFFFF, 0x9F9FBD, 0x00FF00, 0xA18A51, 0x09199F,
+        0x008080, 0xFE7CEC};
 }
