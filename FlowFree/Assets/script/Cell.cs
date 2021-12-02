@@ -15,10 +15,10 @@ public class Cell : MonoBehaviour
 
     public void setWalls(bool up, bool down, bool right, bool left)
     {
-        if (up) walls_[2].active = true;
-        if (down) walls_[3].active = true;
-        if (right) walls_[1].active = true;
-        if (left) walls_[0].active = true;
+        if (up) walls_[2].SetActive(true);
+        if (down) walls_[3].SetActive(true);
+        if (right) walls_[1].SetActive(true);
+        if (left) walls_[0].SetActive(true);
     }
 
     private bool isFlow_;
