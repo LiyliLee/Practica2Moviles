@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public void setCell(bool isflow, bool isBridge, bool isEmpty, string color)
+    public void setCell(bool isflow, bool isBridge, bool isEmpty, string color, int numCell)
     {
         isFlow_ = isflow;
         isBridge_ = isBridge;
         isEmpty_ = isEmpty;
         color_ = color;
+        numCell_ = numCell;
+    }
+
+    public void setWalls(bool up, bool down, bool right, bool left)
+    {
+        if (up) walls_[2].active = true;
+        if (down) walls_[3].active = true;
+        if (right) walls_[1].active = true;
+        if (left) walls_[0].active = true;
     }
 
     private bool isFlow_;
     private bool isEmpty_;
     private bool isBridge_;
+
+    private int numCell_;
 
     public GameObject bridgeSprite_;
 
@@ -39,7 +50,14 @@ public class Cell : MonoBehaviour
         if(isFlow_)
         {
             GetComponent<SpriteRenderer>().enabled = true;
-            GetComponent<SpriteRenderer>().color = new Color(color_[0] + color_[1], color_[2] + color_[3], color_[4] + color_[5]);
+            //Transformar el string hexadecimal del color a RGB 
+            string rs = color_[0].ToString() + color_[1].ToString();
+            int r = System.Convert.ToInt32(rs, 16);
+            string gs = color_[2].ToString() + color_[3].ToString();
+            int g = System.Convert.ToInt32(gs, 16);
+            string bs = color_[4].ToString() + color_[5].ToString();
+            int b = System.Convert.ToInt32(bs, 16);
+            GetComponent<SpriteRenderer>().color = new Color(r, g, b);
         }
     }
 
