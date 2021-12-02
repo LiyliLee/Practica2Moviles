@@ -10,5 +10,4 @@ public class CategotyLevel : ScriptableObject
     public string categoryName;
     public Color color;
 
-    
 }

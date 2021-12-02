@@ -8,15 +8,6 @@ using UnityEngine.Advertisements;
 public class GameManager : MonoBehaviour
 {
     public static GameManager _instance;
-
-    [SerializeField]
-    private CategotyLevel[] categories;
-
-    private int categoryToPlay;
-    private int packToPlay;
-    private int levelToPlay;
-    private int[] packLevelsUnlocked;
-
     void Awake()
     {
         if (_instance != null)
@@ -31,7 +22,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         int totalPacks = 0;
@@ -40,6 +30,8 @@ public class GameManager : MonoBehaviour
             totalPacks += categories[i].packs.Length;
         }
         packLevelsUnlocked = new int[totalPacks];
+
+        grid_.createLevel(categories[0].packs[0].levels, 1);
     }
 
     // Update is called once per frame
@@ -47,4 +39,14 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public Grid grid_;
+
+    [SerializeField]
+    private CategotyLevel[] categories;
+
+    private int categoryToPlay;
+    private int packToPlay;
+    private int levelToPlay;
+    private int[] packLevelsUnlocked;
 }

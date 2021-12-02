@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public Cell(bool isflow, bool isBridge, bool isEmpty, int color)
+    public void setCell(bool isflow, bool isBridge, bool isEmpty, string color)
     {
         isFlow_ = isflow;
         isBridge_ = isBridge;
@@ -25,7 +25,7 @@ public class Cell : MonoBehaviour
     public GameObject[] paths_ = new GameObject[4];
 
     //0 empty, 1 red, 2 blue, ...
-    private int color_;
+    private string color_;
 
     void Start()
     {
@@ -36,6 +36,11 @@ public class Cell : MonoBehaviour
             Instantiate(bridgeSprite_, transform);
         }
         
+        if(isFlow_)
+        {
+            GetComponent<SpriteRenderer>().enabled = true;
+            GetComponent<SpriteRenderer>().color = new Color(color_[0] + color_[1], color_[2] + color_[3], color_[4] + color_[5]);
+        }
     }
 
     public bool isFlow() { return isFlow_; }

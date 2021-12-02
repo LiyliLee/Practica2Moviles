@@ -74,13 +74,14 @@ public class LevelManager : MonoBehaviour
 
         levelData.solutions_ = new List<int>[levelData.numFlows];
         //Flows
-        for (int i = 1; i <= levelData.numFlows; i++)
+        for (int i = 0; i < levelData.numFlows; i++)
         {
             string solution = level[i + 1];
             string[] casillas = solution.Split(',');
+            levelData.solutions_[i] = new List<int>();
             for(int j = 0; j < casillas.Length;j++)
             {
-                levelData.solutions_[i - 1].Add(int.Parse(casillas[j]));
+                levelData.solutions_[i].Add(int.Parse(casillas[j]));
             }
         }
 
