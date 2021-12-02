@@ -24,12 +24,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        int totalPacks = 0;
+        packLevelsUnlocked = new int[categories.Length][];
         for (int i =0; i< categories.Length; i++)
         {
-            totalPacks += categories[i].packs.Length;
+            packLevelsUnlocked[i] = new int[categories[i].packs.Length];
         }
-        packLevelsUnlocked = new int[totalPacks];
+        
 
         grid_.createLevel(categories[0].packs[0].levels, 1);
     }
@@ -48,5 +48,9 @@ public class GameManager : MonoBehaviour
     private int categoryToPlay;
     private int packToPlay;
     private int levelToPlay;
-    private int[] packLevelsUnlocked;
+    private int[][] packLevelsUnlocked;
+
+
+    public CategotyLevel[] GetCategoties() { return categories; }
+    public int GetPackunlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
 }
