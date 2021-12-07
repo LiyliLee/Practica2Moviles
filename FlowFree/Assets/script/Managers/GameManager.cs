@@ -40,6 +40,16 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public static GameManager GetInstance()
+    {
+        return _instance;
+    }
+
+    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
+    {
+        grid_.ProcessInput(move, pos);
+    }
+
     public Grid grid_;
 
     [SerializeField]

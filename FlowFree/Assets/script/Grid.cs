@@ -21,6 +21,8 @@ public class Grid : MonoBehaviour
 
         myRect.anchorMin = new Vector2(rectMiddle.x - horizontalSize / 2, rectMiddle.y - verticalSize / 2);
         myRect.anchorMax = new Vector2(rectMiddle.x + horizontalSize / 2, rectMiddle.y + verticalSize / 2);
+
+        cursorPrefab_.SetActive(false);
     }
 
     public void createLevel(TextAsset levelPack, int level)
@@ -91,13 +93,45 @@ public class Grid : MonoBehaviour
         }
     }
 
+
+    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
+    {
+
+        RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(pos), Vector2.zero);
+
+        if (move == InputManager.MoveType.DRAG)
+        {
+            foreach(Cell c in board_)
+            {
+                if (c == hitInfo.transform.gameObject.GetComponent<Cell>())
+                {
+                    if (c.isFlow())
+                    {
+                        Debug.Log("EY");
+                        Color color = c.gameObject.GetComponent<SpriteRenderer>().color;
+                        cursorPrefab_.transform.position = Camera.main.ScreenToWorldPoint(pos);
+                        cursorPrefab_.SetActive(true);
+                        cursorPrefab_.GetComponent<SpriteRenderer>().color = color;
+
+                    }
+                }
+            }
+        }
+        else
+        {
+            cursorPrefab_.SetActive(false);
+        }
+    }
+
     int width_, height_;
     int levelNum_;
     private Cell[,] board_;
+    private Cell lastTouchedCell_ = null;
     public LevelManager levelManager_;
     private LevelManager.LevelData levelData_;
 
     public GameObject cellPrefab_;
+    public GameObject cursorPrefab_;
 
     private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000",
         "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F",
