@@ -9,6 +9,7 @@ public class PackSelect : MonoBehaviour
 
     CategotyLevel[] categories;
     public PackButton packButtonPrefab;
+    public CategoryTitle catTitlePrefab;
     PackButton[][] packButtons;
     public GameObject scrollLevel;
     public GameObject levelContent;
@@ -21,7 +22,9 @@ public class PackSelect : MonoBehaviour
         {
             packInCategories = categories[i].packs.Length;
             packButtons[i] = new PackButton[packInCategories];
-            for (int j=0; i< packInCategories; j++)
+            CategoryTitle title =  Instantiate(catTitlePrefab,transform);
+            title.Init(categories[i].color, categories[i].categoryName);
+            for (int j=0; j< packInCategories; j++)
             {
                 packButtons[i][j] = Instantiate(packButtonPrefab, transform);
                 packButtons[i][j].Init(categories[i].packs[j].name,i,j,this);
