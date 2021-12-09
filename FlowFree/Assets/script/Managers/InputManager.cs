@@ -17,12 +17,12 @@ public class InputManager : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             // guarda posicion del touch
             touchPos_ = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             GameManager.GetInstance().ProcessInput(MoveType.DRAG, touchPos_);
-            Debug.Log("TOUCH");
+            Debug.Log("TOUCHIN");
         }
 
         if (Input.GetMouseButtonUp(0))
