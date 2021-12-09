@@ -22,7 +22,7 @@ public class Grid : MonoBehaviour
         myRect.anchorMin = new Vector2(rectMiddle.x - horizontalSize / 2, rectMiddle.y - verticalSize / 2);
         myRect.anchorMax = new Vector2(rectMiddle.x + horizontalSize / 2, rectMiddle.y + verticalSize / 2);
 
-        cursorPrefab_.SetActive(false);
+        cursorObject_.SetActive(false);
     }
 
     public void createLevel(TextAsset levelPack, int level)
@@ -97,29 +97,52 @@ public class Grid : MonoBehaviour
     public void ProcessInput(InputManager.MoveType move, Vector2 pos)
     {
 
-        RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(pos), Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(pos), Vector2.zero);
 
         if (move == InputManager.MoveType.DRAG)
         {
             foreach(Cell c in board_)
             {
-                if (c == hitInfo.transform.gameObject.GetComponent<Cell>())
+                if (c == hit.transform.gameObject.GetComponent<Cell>())
                 {
                     if (c.isFlow())
                     {
-                        Debug.Log("EY");
                         Color color = c.gameObject.GetComponent<SpriteRenderer>().color;
-                        cursorPrefab_.transform.position = Camera.main.ScreenToWorldPoint(pos);
-                        cursorPrefab_.SetActive(true);
-                        cursorPrefab_.GetComponent<SpriteRenderer>().color = color;
+                        color = new Color(color.r, color.g, color.b, 0.3f);
+
+                        cursorObject_.SetActive(true);
+                        cursorObject_.GetComponent<SpriteRenderer>().color = color;
+
+                        lastTouchedCell_ = c;
 
                     }
+                    else
+                    {
+                        c.setPreviousCell(lastTouchedCell_);
+                        // der
+                        if (c.getPreviousCell().transform.position.x < c.transform.position.x && c.getPreviousCell().transform.position.y == c.transform.position.y)
+                            c.setActivePath(1);
+                        // izq
+                        else if (c.getPreviousCell().transform.position.x > c.transform.position.x && c.getPreviousCell().transform.position.y == c.transform.position.y)
+                            c.setActivePath(3);
+                        // down
+                        else if (c.getPreviousCell().transform.position.y > c.transform.position.y && c.getPreviousCell().transform.position.x == c.transform.position.x)
+                            c.setActivePath(0);
+                        // up
+                        else if (c.getPreviousCell().transform.position.y < c.transform.position.y && c.getPreviousCell().transform.position.x == c.transform.position.x)
+                            c.setActivePath(2);
+
+                    }
+
+                    cursorObject_.transform.position = Camera.main.ScreenToWorldPoint(pos);
+                    cursorObject_.transform.position = new Vector3(cursorObject_.transform.position.x, cursorObject_.transform.position.y, 0);
                 }
             }
         }
         else
         {
-            cursorPrefab_.SetActive(false);
+            cursorObject_.SetActive(false);
+            lastTouchedCell_ = null;
         }
     }
 
@@ -130,8 +153,11 @@ public class Grid : MonoBehaviour
     public LevelManager levelManager_;
     private LevelManager.LevelData levelData_;
 
+    // para saber las casillas que llevan tuberia
+    private bool [,] flowed_;
+
     public GameObject cellPrefab_;
-    public GameObject cursorPrefab_;
+    public GameObject cursorObject_;
 
     private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000",
         "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F",
