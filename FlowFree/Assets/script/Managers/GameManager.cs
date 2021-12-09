@@ -22,12 +22,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnEnable()
     {
         packLevelsUnlocked = new int[categories.Length][];
         for (int i =0; i< categories.Length; i++)
         {
             packLevelsUnlocked[i] = new int[categories[i].packs.Length];
+
         }
         
 
