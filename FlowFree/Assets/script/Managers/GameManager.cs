@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         }
         
 
-        //grid_.createLevel(categories[0].packs[0].levels, 1);
+        grid_.createLevel(categories[0].packs[0].levels, 1);
     }
 
     // Update is called once per frame

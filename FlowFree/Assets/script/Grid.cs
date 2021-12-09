@@ -40,12 +40,12 @@ public class Grid : MonoBehaviour
         {
             int cell1 = levelData_.solutions_[i][0];
             int cell2 = levelData_.solutions_[i][levelData_.solutions_[i].Count-1];
-            board_[cell1 / width_, cell1 % height_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell1 % width_), height_ / 2 - (cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-            board_[cell1 / width_, cell1 % height_].setCell(true, false, false, colors_[i], cell1);
-            board_[cell1 / width_, cell1 % height_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
-            board_[cell2 / width_, cell2 % height_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell2 % width_), height_ / 2 - (cell2 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-            board_[cell2 / width_, cell2 % height_].setCell(true, false, false, colors_[i], cell2);
-            board_[cell2 / width_, cell2 % height_].setWalls(cell2 / width_ == 0, cell2 / width_ == width_ - 1, cell2 % height_ == height_ - 1, cell2 % height_ == 0);
+            board_[cell1 % width_, cell1 / width_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell1 % width_), height_ / 2 - (cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+            board_[cell1 % width_, cell1 / width_].setCell(true, false, false, colors_[i], cell1);
+            board_[cell1 % width_, cell1 / width_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
+            board_[cell2 % width_, cell2 / width_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell2 % width_), height_ / 2 - (cell2 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+            board_[cell2 % width_, cell2 / width_].setCell(true, false, false, colors_[i], cell2);
+            board_[cell2 % width_, cell2 / width_].setWalls(cell2 / width_ == 0, cell2 / width_ == width_ - 1, cell2 % height_ == height_ - 1, cell2 % height_ == 0);
         }
 
         //Bridges
@@ -54,9 +54,9 @@ public class Grid : MonoBehaviour
             for (int i = 0; i < levelData_.bridges_.Length; i++)
             {
                 int cell1 = levelData_.bridges_[i];
-                board_[cell1 / width_, cell1 % height_] = Instantiate(cellPrefab_, new Vector3(-(width_/2)+(cell1 % width_), height_/2-(cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-                board_[cell1 / width_, cell1 % height_].setCell(false, true, false, "000000", cell1);
-                board_[cell1 / width_, cell1 % height_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
+                board_[cell1 % width_, cell1 / width_] = Instantiate(cellPrefab_, new Vector3(-(width_/2)+(cell1 % width_), height_/2-(cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+                board_[cell1 % width_, cell1 / width_].setCell(false, true, false, "000000", cell1);
+                board_[cell1 % width_, cell1 / width_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
             }
         }
 
@@ -66,9 +66,9 @@ public class Grid : MonoBehaviour
             for (int i = 0; i < levelData_.emptys_.Length; i++)
             {
                 int cell1 = levelData_.emptys_[i];
-                board_[cell1 / width_, cell1 % height_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell1 % width_), height_ / 2 - (cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-                board_[cell1 / width_, cell1 % height_].setCell(false, false, true, "000000", cell1);
-                board_[cell1 / width_, cell1 % height_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
+                board_[cell1 % width_, cell1 / width_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (cell1 % width_), height_ / 2 - (cell1 / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+                board_[cell1 % width_, cell1 / width_].setCell(false, false, true, "000000", cell1);
+                board_[cell1 % width_, cell1 / width_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
             }
         }
 
@@ -84,11 +84,11 @@ public class Grid : MonoBehaviour
         //Rest
         for (int i = 0; i < width_ * height_; i++)
         {
-            if (board_[i / width_, i % height_] == null)
+            if (board_[i % width_, i / width_] == null)
             {
-                board_[i / width_, i % height_] = Instantiate(cellPrefab_, new Vector3((i % width_), -(i / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-                board_[i / width_, i % height_].setCell(false, false, false, "000000", i);
-                board_[i / width_, i % height_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
+                board_[i % width_, i / width_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (i % width_), height_ / 2 - (i / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+                board_[i % width_, i / width_].setCell(false, false, false, "000000", i);
+                board_[i % width_, i / width_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
             }
         }
     }
