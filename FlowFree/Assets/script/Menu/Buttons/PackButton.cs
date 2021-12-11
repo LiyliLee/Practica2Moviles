@@ -10,6 +10,7 @@ public class PackButton : MonoBehaviour
     int categoryId;
     int packId;
     int nivelespasados;
+    Color c;
 
     PackSelect packSelectContent;
     
@@ -17,11 +18,16 @@ public class PackButton : MonoBehaviour
     public void Init(string PackN, int catid, int packid, PackSelect sel)
     {
         packName.text = PackN;
+        categoryId= catid;
+        packId= packid;
         nivelespasados = GameManager._instance.GetPackunlockeds(catid, packid);
+        c= GameManager._instance.GetCategoties()[catid].color;
         packPercentaje.text = nivelespasados + " / " + 150;
+        packName.color =c;
     }
     public void showLevels()
     {
+       
         packSelectContent.showLevels(categoryId, packId);
     }
 }

@@ -19,4 +19,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e551f8e331406b45b3c8225e85cdf87, type: 2}
   - {fileID: 11400000, guid: fa53af24041d4c646894c31659c99722, type: 2}
   categoryName: Manias
-  color: {r: 1, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0, b: 0, a: 1}

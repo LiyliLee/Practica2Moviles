@@ -11,6 +11,8 @@ public class Cell : MonoBehaviour
         isEmpty_ = isEmpty;
         color_ = color;
         numCell_ = numCell;
+
+        setPaths();
     }
 
     public void setWalls(bool up, bool down, bool right, bool left)
@@ -19,6 +21,32 @@ public class Cell : MonoBehaviour
         if (down) walls_[3].SetActive(true);
         if (right) walls_[1].SetActive(true);
         if (left) walls_[0].SetActive(true);
+    }
+
+    public void setActivePath(int dir)
+    {
+        paths_[dir].GetComponent<SpriteRenderer>().color = prev_.GetComponent<SpriteRenderer>().color;
+        paths_[dir].SetActive(true);
+    }
+
+    public void setPreviousCell(Cell c)
+    {
+        prev_ = c;
+    }
+
+    public Cell getPreviousCell()
+    {
+        return prev_;
+    }
+
+    private void setPaths()
+    {
+        int rot = 0;
+        for(int i = 0; i < paths_.Length; i++)
+        {
+            paths_[i].transform.rotation = Quaternion.Euler(0, 0, rot);
+                rot += 90;
+        }
     }
 
     private bool isFlow_;
@@ -37,6 +65,8 @@ public class Cell : MonoBehaviour
 
     //0 empty, 1 red, 2 blue, ...
     private string color_;
+
+    private Cell prev_, next_;
 
     void Start()
     {

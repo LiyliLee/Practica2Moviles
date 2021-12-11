@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-#if UNITY_EDITOR
-    private Vector3 mousePos_;
-#else
-    private Vector3 touchPos_;
-#endif
+    private Vector2 touchPos_;
 
+    public enum MoveType { DRAG, NONE};
     // Start is called before the first frame update
     void Start()
     {
@@ -22,26 +19,37 @@ public class InputManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
-            mousePos_ = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // guarda posicion del touch
+            touchPos_ = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            GameManager.GetInstance().ProcessInput(MoveType.DRAG, touchPos_);
+            Debug.Log("TOUCHIN");
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("TOUCH END");
+            // fin del movimiento
+            GameManager.GetInstance().ProcessInput(MoveType.NONE, touchPos_);
         }
 #else
         if (Input.touchCount > 0)
         {
-            Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.touches[0].position);
+            // guarda posicion del touch
+            Touch touch = Input.touches[0];
+
+            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+            {
+                touchPos_ = touch.position;
+                GameManager.GetInstance().ProcessInput(MoveType.DRAG, touchPos_);
+            }
+
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                // fin del movimiento
+                 GameManager.GetInstance().ProcessInput(MoveType.NONE, touchPos_);
+            }
         }
 
 #endif
     }
-
-#if UNITY_EDITOR
-    Vector3 GetMousePosition()
-    {
-        return mousePos_;
-    }
-#else
-    Vector3 GetTouchPosition()
-    {
-        return touchPos_;
-    }
-#endif
 }

@@ -22,12 +22,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnEnable()
     {
         packLevelsUnlocked = new int[categories.Length][];
         for (int i =0; i< categories.Length; i++)
         {
             packLevelsUnlocked[i] = new int[categories[i].packs.Length];
+
         }
         
 
@@ -38,6 +39,16 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public static GameManager GetInstance()
+    {
+        return _instance;
+    }
+
+    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
+    {
+        grid_.ProcessInput(move, pos);
     }
 
     public Grid grid_;

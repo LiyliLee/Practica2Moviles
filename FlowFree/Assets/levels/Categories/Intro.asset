@@ -18,4 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a55bb76d159ebf749bdf4d26f7dd6564, type: 2}
   - {fileID: 11400000, guid: c7931cda34ef7554d860e81822f56e51, type: 2}
   categoryName: Intro
-  color: {r: 0, g: 0.5529412, b: 0, a: 0}
+  color: {r: 0, g: 0.5529412, b: 0, a: 1}
