@@ -84,7 +84,7 @@ public class Grid : MonoBehaviour
         {
             if (board_[i / width_, i % height_] == null)
             {
-                board_[i / width_, i % height_] = Instantiate(cellPrefab_, new Vector3((i % width_), -(i / height_)), Quaternion.identity, transform).GetComponent<Cell>();
+                board_[i / width_, i % height_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (i % width_), height_ / 2 - (i / height_)), Quaternion.identity, transform).GetComponent<Cell>();
                 board_[i / width_, i % height_].setCell(false, false, false, "000000", i);
                 board_[i / width_, i % height_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
             }

@@ -30,10 +30,10 @@ public class Cell : MonoBehaviour
     public GameObject bridgeSprite_;
 
     //izq, der, arr, ab
-    public GameObject[] walls_ = new GameObject[4];
+    public GameObject[] walls_;
 
     //arr, ab, izq, der
-    public GameObject[] paths_ = new GameObject[4];
+    public GameObject[] paths_;
 
     //0 empty, 1 red, 2 blue, ...
     private string color_;
