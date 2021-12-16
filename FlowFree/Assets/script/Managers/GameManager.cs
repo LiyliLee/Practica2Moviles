@@ -7,6 +7,19 @@ using UnityEngine.Advertisements;
 
 public class GameManager : MonoBehaviour
 {
+    public Grid grid_;
+
+    [SerializeField]
+    private CategotyLevel[] categories_;
+
+    private int categoryToPlay;
+    private int packToPlay;
+    private int levelToPlay;
+    private int[][] packLevelsUnlocked;
+
+    private PlayerData player_;
+
+
     public static GameManager _instance;
     void Awake()
     {
@@ -18,21 +31,34 @@ public class GameManager : MonoBehaviour
         else
         {
             _instance = this;
+
+
+            List<string> packNames = new List<string>();
+
+            for(int i = 0; i < categories_.Length; i++)
+            {
+                foreach(PackLevel pack in categories_[i].packs)
+                {
+                    packNames.Add(pack.packName);
+                }
+            }
+
+            player_ = DataSaver.LoadPlayerData(packNames);
+
             DontDestroyOnLoad(gameObject);
         }
     }
 
     void OnEnable()
     {
-        packLevelsUnlocked = new int[categories.Length][];
-        for (int i =0; i< categories.Length; i++)
+        /*packLevelsUnlocked = new int[categories_.Length][];
+        for (int i =0; i< categories_.Length; i++)
         {
-            packLevelsUnlocked[i] = new int[categories[i].packs.Length];
+            packLevelsUnlocked[i] = new int[categories_[i].packs.Length];
 
-        }
+        }*/
         
-
-        grid_.createLevel(categories[0].packs[0].levels, 1);
+        grid_.createLevel(categories_[0].packs[0].levels, 1);
     }
 
     // Update is called once per frame
@@ -51,17 +77,17 @@ public class GameManager : MonoBehaviour
         grid_.ProcessInput(move, pos);
     }
 
-    public Grid grid_;
-
-    [SerializeField]
-    private CategotyLevel[] categories;
-
-    private int categoryToPlay;
-    private int packToPlay;
-    private int levelToPlay;
-    private int[][] packLevelsUnlocked;
 
 
-    public CategotyLevel[] GetCategoties() { return categories; }
+    public CategotyLevel[] GetCategoties() { return categories_; }
     public int GetPackunlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
+
+    private void OnApplicationQuit()
+    {
+        DataSaver.SavePlayerData(player_);
+    }
+
+    public PlayerData GetPlayerData() {
+        return GetInstance().player_;
+    }
 }

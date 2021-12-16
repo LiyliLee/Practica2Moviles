@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid_: {fileID: 1081463428}
-  categories:
+  categories_:
   - {fileID: 11400000, guid: a502acdef7b822645b14a7b35d92483b, type: 2}
   - {fileID: 11400000, guid: 73a09aeae3351b3458bfa43879647ade, type: 2}
   - {fileID: 11400000, guid: 47d3ebccc06ade944af96dd17e131ac7, type: 2}
