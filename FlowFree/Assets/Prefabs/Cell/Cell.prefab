@@ -371,6 +371,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 142475705260594535}
     m_Modifications:
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.x
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2693726218262296773, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
       propertyPath: m_Name
       value: Path (3)
@@ -529,6 +545,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 142475705260594535}
     m_Modifications:
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.x
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2693726218262296773, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
       propertyPath: m_Name
       value: Path (2)
@@ -600,6 +632,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 142475705260594535}
     m_Modifications:
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.x
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2693726218262296773, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
       propertyPath: m_Name
       value: Path (1)
@@ -746,6 +794,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 142475705260594535}
     m_Modifications:
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.x
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+    - target: {fileID: 749745347173533938, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2693726218262296773, guid: ef39e636b5d8a2e43912826f54adc180, type: 3}
       propertyPath: m_Name
       value: Path

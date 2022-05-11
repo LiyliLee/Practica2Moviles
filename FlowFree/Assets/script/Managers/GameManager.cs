@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
         }*/
         
-        grid_.createLevel(categories_[0].packs[0].levels, 1);
+        grid_.createLevel(categories_[0].packs[0].levels, 5);
     }
 
     // Update is called once per frame
@@ -76,8 +76,6 @@ public class GameManager : MonoBehaviour
     {
         grid_.ProcessInput(move, pos);
     }
-
-
 
     public CategotyLevel[] GetCategoties() { return categories_; }
     public int GetPackunlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }

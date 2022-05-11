@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-
 
 public class Grid : MonoBehaviour
 {
@@ -23,6 +23,37 @@ public class Grid : MonoBehaviour
         myRect.anchorMax = new Vector2(rectMiddle.x + horizontalSize / 2, rectMiddle.y + verticalSize / 2);
 
         cursorObject_.SetActive(false);
+    }
+
+    //Metodo para adaptar el tablero al tamaño de la pantalla
+    //Se llama unicamente al crear el tablero
+    void adaptToResolution(int cols, int rows)
+    {
+        cam.orthographic = true;
+
+        float unitsPerPixel;
+        float orthSize;
+
+        if (Math.Abs(Screen.width - Screen.height) > 400)
+        {
+            if (Screen.width > Screen.height)
+            {
+                unitsPerPixel = (float)rows / (float)Screen.height;
+                orthSize = unitsPerPixel * Screen.width * 0.5f;
+            }
+            else
+            {
+                unitsPerPixel = (float)rows / (float)Screen.width;
+                orthSize = unitsPerPixel * Screen.height * 0.5f;
+            }
+        }
+        else
+        {
+            unitsPerPixel = (float)rows / (float)Screen.width;
+            orthSize = unitsPerPixel * Screen.height * 0.5f * 1.5f;
+        }
+
+        cam.orthographicSize = orthSize;
     }
 
     public void createLevel(TextAsset levelPack, int level)
@@ -91,6 +122,8 @@ public class Grid : MonoBehaviour
                 board_[i % width_, i / width_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
             }
         }
+
+        adaptToResolution(height_, width_);
     }
 
 
@@ -103,9 +136,6 @@ public class Grid : MonoBehaviour
         {
             foreach(Cell c in board_)
             {
-                //board_[i / width_, i % height_] = Instantiate(cellPrefab_, new Vector3(-(width_ / 2) + (i % width_), height_ / 2 - (i / height_)), Quaternion.identity, transform).GetComponent<Cell>();
-                //board_[i / width_, i % height_].setCell(false, false, false, "000000", i);
-                //board_[i / width_, i % height_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
                 if (c == hit.transform.gameObject.GetComponent<Cell>())
                 {
                     if (c.isFlow())
@@ -161,6 +191,8 @@ public class Grid : MonoBehaviour
 
     public GameObject cellPrefab_;
     public GameObject cursorObject_;
+
+    Camera cam;
 
     private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000",
         "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F",
