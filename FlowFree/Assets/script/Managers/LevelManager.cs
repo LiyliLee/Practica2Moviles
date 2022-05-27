@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -87,6 +88,29 @@ public class LevelManager : MonoBehaviour
 
         return levelData;
     }
+    public void SetLevel(TextAsset pack, int level)
+    {
+        levelData_ = CreateLevel(pack, level);
+        gridManager.CreateLevel(levelData_);
+        SetLevelTexts(levelData_);
+    }
 
-    
+    public void SetLevelTexts(LevelData leveldata)
+    {
+        sizeText.text = levelData_.width + "x" + levelData_.height;
+        flowsText.text = "Flows: 0/" + levelData_.numFlows;
+        movesText.text = "Moves: 0 Best: 0";
+        pipeText.text = "Pipe: 0%";
+    }
+
+    LevelData levelData_;
+    public GridManager gridManager;
+
+    // Level/Progression texts
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI sizeText;
+    public TextMeshProUGUI flowsText;
+    public TextMeshProUGUI movesText;
+    public TextMeshProUGUI pipeText;
+
 }
