@@ -20,14 +20,14 @@ public class PackButton : MonoBehaviour
         packName.text = PackN;
         categoryId= catid;
         packId= packid;
-        nivelespasados = GameManager._instance.GetPackunlockeds(catid, packid);
-        c= GameManager._instance.GetCategoties()[catid].color;
+        nivelespasados = GameManager._instance.GetPackUnlockeds(catid, packid);
+        c= GameManager._instance.GetCategories()[catid].color;
         packPercentaje.text = nivelespasados + " / " + 150;
         packName.color =c;
     }
     public void showLevels()
     {
        
-        packSelectContent.showLevels(categoryId, packId);
+        //packSelectContent.showLevels(categoryId, packId);
     }
 }

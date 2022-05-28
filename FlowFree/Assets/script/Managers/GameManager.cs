@@ -7,11 +7,13 @@ using UnityEngine.Advertisements;
 
 public class GameManager : MonoBehaviour
 {
+    public MenuManager _menuManager;
     public LevelManager levelManager;
     public GridManager gridManager;
 
+    public CategoryLevel[] categories_;
+
     [SerializeField]
-    private CategotyLevel[] categories_;
     private int categoryToPlay;
     private int packToPlay;
     private int levelToPlay;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
 
-            List<string> packNames = new List<string>();
+            /*List<string> packNames = new List<string>();
 
             for(int i = 0; i < categories_.Length; i++)
             {
@@ -46,7 +48,9 @@ public class GameManager : MonoBehaviour
 
             player_ = DataSaver.LoadPlayerData(packNames);
 
-            levelManager.SetLevel(categories_[0].packs[0].levels, 2);
+            levelManager.SetLevel(categories_[0].packs[0].levels, 2);*/
+
+            SetupScene();
 
             DontDestroyOnLoad(gameObject);
         }
@@ -57,8 +61,13 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    public CategotyLevel[] GetCategoties() { return categories_; }
-    public int GetPackunlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
+    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
+    {
+        //grid_.ProcessInput(move, pos);
+    }
+
+    public CategoryLevel[] GetCategories() { return categories_; }
+    public int GetPackUnlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
 
     private void OnApplicationQuit()
     {
@@ -75,4 +84,18 @@ public class GameManager : MonoBehaviour
     }
 
     
+    private void SetupScene()
+    {
+        if (_instance.levelManager != null)
+        {
+            // se carga nivel
+            levelManager.SetLevel(categories_[0].packs[0].levels, 2);
+
+        }
+        else if (_instance._menuManager != null)
+        {
+            // se carga menu
+            _instance._menuManager.Init(categories_);
+        }
+    }
 }
