@@ -94,17 +94,17 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        canPlay_ = true;
+        levelManager_.SetPlay(true);
     }
 
     public void setPlay(bool aux)
     {
-        canPlay_ = aux;
+        levelManager_.SetPlay(aux);
     }
 
     private void Update()
     {
-        if (Input.touchCount > 0 && canPlay_)
+        if (Input.touchCount > 0 && levelManager_.GetCanPlay())
         {
             Touch touch = Input.GetTouch(0);
             float x = cam.ScreenToWorldPoint(touch.position).x;
@@ -425,8 +425,6 @@ public class GridManager : MonoBehaviour
     int maxCount_;
     int count_;
     int steps_;
-
-    bool canPlay_;
 
     private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000",
         "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F",
