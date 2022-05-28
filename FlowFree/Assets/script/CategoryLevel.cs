@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName ="New Categoty", menuName ="Category")]
-public class CategotyLevel : ScriptableObject
+[CreateAssetMenu(fileName ="New Category", menuName ="Category")]
+public class CategoryLevel : ScriptableObject
 {
     public PackLevel[] packs;
     public string categoryName;

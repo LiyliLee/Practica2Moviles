@@ -2,50 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PackSelect : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public TextMeshProUGUI _packName = null;
+    public TextMeshProUGUI _completeLevel = null;
+    public Button _button = null;
 
-    CategotyLevel[] categories;
-    public PackButton packButtonPrefab;
-    public CategoryTitle catTitlePrefab;
-    PackButton[][] packButtons;
-    public GameObject scrollLevel;
-    public GameObject levelContent;
-    int packInCategories;
+    private LevelSelect _levelSelect;
+    private string _category;
+
+    // Start is called before the first frame update
     public void Start()
     {
-        categories = GameManager._instance.GetCategoties();
-        packButtons = new PackButton[categories.Length][];
-        for (int i = 0; i < categories.Length; i++)
-        {
-            packInCategories = categories[i].packs.Length;
-            packButtons[i] = new PackButton[packInCategories];
-            CategoryTitle title =  Instantiate(catTitlePrefab,transform);
-            title.Init(categories[i].color, categories[i].categoryName);
-            for (int j=0; j< packInCategories; j++)
-            {
-                packButtons[i][j] = Instantiate(packButtonPrefab, transform);
-                packButtons[i][j].Init(categories[i].packs[j].name,i,j,this);
-            }
-        }
-
     }
 
-    public LevelButton levelButtonPrefab;
-    LevelButton[] levelButtons;
-
-    public void showLevels(int catId , int packId)
+    public void SetPack(string categoryName, string packName, Color c)
     {
-        levelButtons = new LevelButton[150];
-        for (int i =0; i <5;i++)
-        {
+        _category = categoryName;
+        _packName.text = packName;
+        _packName.color = c;
 
-            levelButtons[i] = Instantiate(levelButtonPrefab, levelContent.transform);
-            //levelButtons[i].Init();
-            print("instanciar level  "+i+"\n");
-        }
+        _completeLevel.text = 0.ToString() + "/" + 150.ToString();
     }
 
+    public void SetCallback(LevelSelect ls)
+    {
+        _levelSelect = ls;
+        _button.onClick.AddListener(ButtonCallback);
+    }
+
+    private void ButtonCallback()
+    {
+        _levelSelect.gameObject.SetActive(true);
+        _levelSelect.CreateLevelButtons();
+    }
 }
