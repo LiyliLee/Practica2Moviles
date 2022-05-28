@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        //DataSaver.SavePlayerData(player_);
+        DataSaver.SavePlayerData(player_);
     }
 
     public PlayerData GetPlayerData() {
