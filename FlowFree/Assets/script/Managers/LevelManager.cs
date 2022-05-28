@@ -92,19 +92,43 @@ public class LevelManager : MonoBehaviour
     {
         levelData_ = CreateLevel(pack, level);
         gridManager.CreateLevel(levelData_);
-        SetLevelTexts(levelData_);
+        SetFlowsText(0, levelData_.numFlows);
+        SetPipeText(0, 1);
+        SetMovesText(0, levelData_.numFlows);
     }
 
-    public void SetLevelTexts(LevelData leveldata)
+    public void Win()
     {
-        sizeText.text = levelData_.width + "x" + levelData_.height;
-        flowsText.text = "Flows: 0/" + levelData_.numFlows;
-        movesText.text = "Moves: 0 Best: 0";
-        pipeText.text = "Pipe: 0%";
+        finishPanel_.SetActive(true);
+        finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(gridManager.getSteps() == gridManager.getNumFlows(), gridManager.getSteps());
+        gridManager.setPlay(false);
+    }
+
+    public void RewardButton()
+    {
+
+    }
+
+    public void SetPipeText(int count, int maxCount)
+    {
+        float percentage = Mathf.Round(((float)count / (float)maxCount)*100);
+        pipeText.text = "tubería: " + percentage + "%";
+    }
+
+    public void SetFlowsText(int completed, int total)
+    {
+        flowsText.text = "flujos: " + completed + "/" + total;
+    }
+
+    public void SetMovesText(int moves, int best)
+    {
+        movesText.text = "pasos: " + moves + " récord: " + best;
     }
 
     LevelData levelData_;
     public GridManager gridManager;
+
+    public GameObject finishPanel_;
 
     // Level/Progression texts
     public TextMeshProUGUI levelText;

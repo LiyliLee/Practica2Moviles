@@ -57,20 +57,17 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
-    {
-        //grid_.ProcessInput(move, pos);
-    }
-
     public CategotyLevel[] GetCategoties() { return categories_; }
     public int GetPackunlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
 
     private void OnApplicationQuit()
     {
-        //DataSaver.SavePlayerData(player_);
+        DataSaver.SavePlayerData(player_);
     }
 
     public PlayerData GetPlayerData() {
         return GetInstance().player_;
     }
+
+    
 }
