@@ -69,5 +69,10 @@ public class GameManager : MonoBehaviour
         return GetInstance().player_;
     }
 
+    public void AddHint()
+    {
+
+    }
+
     
 }
