@@ -2,57 +2,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Monetization;
+using UnityEngine.Advertisements;
 
-public class RewardedButton : MonoBehaviour
+public class RewardedButton : MonoBehaviour, IUnityAdsListener
 {
     private string placementId = "Rewarded_Android";
-    private Button adButton;
     private string gameId = "4508761";
+
+    public Button button_;
+
+    BannerPosition bannerPos_ = BannerPosition.BOTTOM_CENTER;
 
     void Start()
     {
-        adButton = GetComponent<Button>();
-        if (adButton)
-        {
-            adButton.onClick.AddListener(ShowAd);
-        }
+        // Set interactivity to be dependent on the Placement’s status:
+        button_.interactable = Advertisement.IsReady(placementId);
 
-        if (Monetization.isSupported)
-        {
-            Monetization.Initialize(gameId, true);
-        }
-    }
+        // Map the ShowRewardedVideo function to the button’s click listener:
+        if (button_) button_.onClick.AddListener(ShowAd);
 
-    void Update()
-    {
-        if (adButton)
-        {
-            adButton.interactable = Monetization.IsReady(placementId);
-        }
+        // Initialize the Ads listener and service:
+        Advertisement.AddListener(this);
+        Advertisement.Initialize(gameId, true);
+
+        Advertisement.Banner.SetPosition(bannerPos_);
     }
 
     void ShowAd()
     {
-        ShowAdCallbacks options = new ShowAdCallbacks();
-        options.finishCallback = HandleShowResult;
-        ShowAdPlacementContent ad = Monetization.GetPlacementContent(placementId) as ShowAdPlacementContent;
-        ad.Show(options);
+        Advertisement.Show(placementId);
     }
 
-    void HandleShowResult(ShowResult result)
+    // Implement IUnityAdsListener interface methods:
+    public void OnUnityAdsReady(string plId)
     {
-        if (result == ShowResult.Finished)
+        // If the ready Placement is rewarded, activate the button: 
+        if (plId == placementId)
         {
-            // Reward the player
-        }
-        else if (result == ShowResult.Skipped)
-        {
-            Debug.LogWarning("The player skipped the video - DO NOT REWARD!");
-        }
-        else if (result == ShowResult.Failed)
-        {
-            Debug.LogError("Video failed to show");
+            button_.interactable = true;
         }
     }
+
+    public void OnUnityAdsDidStart(string message)
+    {
+        Debug.Log("Ad starting");
+    }
+
+    public void OnUnityAdsDidFinish(string plId, ShowResult showResult)
+    {
+        if (showResult == ShowResult.Finished)
+        {
+            GameManager._instance.AddHint();
+        }
+        else
+        {
+            Debug.LogWarning("The ad did not finish due to an error.");
+        }
+    }
+
+    public void OnUnityAdsDidError(string message)
+    {
+        Debug.LogWarning("The ad did not finish due to an error.");
+    }
+
 }

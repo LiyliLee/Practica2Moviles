@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
 
         levelData.numFlows = int.Parse(cabecera[3]);
 
+        //Puentes
         if(cabecera.Length > 4)
         {
             string[] bridges = level[4].Split(':');
@@ -52,6 +53,7 @@ public class LevelManager : MonoBehaviour
                 levelData.bridges_[i] = int.Parse(bridges[i]);
             }
         }
+        //Huecos
         if (cabecera.Length > 5)
         {
             string[] emptys = level[5].Split(':');
@@ -61,6 +63,7 @@ public class LevelManager : MonoBehaviour
                 levelData.emptys_[i] = emptys[i][0] - '0';
             }
         }
+        //Paredes
         if (cabecera.Length > 6)
         {
             string[] walls = level[6].Split(':');
@@ -95,18 +98,19 @@ public class LevelManager : MonoBehaviour
         SetFlowsText(0, levelData_.numFlows);
         SetPipeText(0, 1);
         SetMovesText(0, levelData_.numFlows);
+        SetHintText(3);
     }
 
     public void Win()
     {
         finishPanel_.SetActive(true);
         finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(gridManager.getSteps() == gridManager.getNumFlows(), gridManager.getSteps());
-        gridManager.setPlay(false);
+        canPlay_ = false;
     }
 
-    public void RewardButton()
+    public void SetPlay(bool aux)
     {
-
+        canPlay_ = aux;
     }
 
     public void SetPipeText(int count, int maxCount)
@@ -125,16 +129,29 @@ public class LevelManager : MonoBehaviour
         movesText.text = "pasos: " + moves + " récord: " + best;
     }
 
+    public void SetHintText(int hints)
+    {
+        hintText.text = hints + " x";
+    }
+
+    public bool GetCanPlay()
+    {
+        return canPlay_;
+    }
+
     LevelData levelData_;
     public GridManager gridManager;
 
     public GameObject finishPanel_;
 
-    // Level/Progression texts
+    bool canPlay_ = true;
+
+    // Textos de progresion de nivel
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI sizeText;
     public TextMeshProUGUI flowsText;
     public TextMeshProUGUI movesText;
     public TextMeshProUGUI pipeText;
+    public TextMeshProUGUI hintText;
 
 }
