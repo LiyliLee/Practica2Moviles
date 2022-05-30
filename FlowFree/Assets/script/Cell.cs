@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    void Start()
-    {
-        //transform.localScale = new Vector2(1, 1);
-    }
     public void setCell(bool isflow, bool isEmpty, string color, int numCell)
     {
         isFlow_ = isflow;
@@ -36,6 +32,9 @@ public class Cell : MonoBehaviour
         float b = (float)System.Convert.ToInt32(bs, 16)/255.0f;
         return new Color(r, g, b);
     }
+
+    public bool isFlow() { return isFlow_; }
+    public bool isEmpty() { return isEmpty_; }
 
     // 0 arriba 1 abajo 2 izq 3 der
     public bool getActiveWall(int num)
@@ -112,19 +111,17 @@ public class Cell : MonoBehaviour
 
     private bool isFlow_;
     private bool isEmpty_;
+    //Si esta siendo usada (es un flow o tiene un camino)
     private bool isActive_;
 
     private int numCell_;
 
+    //0 arriba 1 abajo 2 izq 3 der
     public GameObject[] walls_;
-
     public GameObject[] paths_;
 
     private string color_;
+
     
-
-    public bool isFlow() { return isFlow_; }
-    public bool isEmpty() { return isEmpty_; }
-
 
 }

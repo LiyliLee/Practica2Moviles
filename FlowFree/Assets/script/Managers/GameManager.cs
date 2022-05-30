@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     private int categoryToPlay;
     private int packToPlay;
     private int levelToPlay;
+    private int levelsInPack_;
     private int[][] packLevelsUnlocked;
 
     private PlayerData player_;
@@ -46,9 +47,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            player_ = DataSaver.LoadPlayerData(packNames);
-            */
-            //levelManager.SetLevel(categories_[0].packs[0].levels, 5);
+            player_ = DataSaver.LoadPlayerData(packNames);*/
 
             SetupScene();
 
@@ -75,16 +74,63 @@ public class GameManager : MonoBehaviour
 
     public void AddHint()
     {
-
+        levelManager.AddHintNum(1);
     }
 
-    
+    public void NextLevel()
+    {
+        if (levelsInPack_ > levelToPlay + 1)
+        {
+            levelToPlay++;
+            ToLevelScene();
+        }
+        else ToMenuScene();
+    }
+
+    public void PrevLevel()
+    {
+        if(levelToPlay > 0)
+        {
+            levelToPlay--;
+            ToLevelScene();
+        }
+    }
+
+    public void ToLevelScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+    public void ToMenuScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void SetLevelToPlay(int level)
+    {
+        levelToPlay = level;
+    }
+
+    public void SetCategoryToPlay(int category)
+    {
+        categoryToPlay = category;
+    }
+
+    public void SetPackToPlay(int pack)
+    {
+        packToPlay = pack;
+    }
+
+    public void SetLevelsInPack(int levels)
+    {
+        levelsInPack_ = levels;
+    }
+
     private void SetupScene()
     {
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(categories_[2].packs[2].levels, 5, categories_[2].color);
+            levelManager.SetLevel(categories_[2].packs[0].levels, 5, categories_[2].color);
 
         }
         else if (_instance._menuManager != null)

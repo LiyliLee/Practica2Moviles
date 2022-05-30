@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class LevelManager : MonoBehaviour
@@ -24,6 +25,7 @@ public class LevelManager : MonoBehaviour
         string packText = pack.text;
 
         string[] levels = packText.Split('\n');
+        GameManager._instance.SetLevelsInPack(levels.Length);
 
         string[] level = levels[levelToPlay].Split(';');
         string[] cabecera = level[0].Split(',');
@@ -109,28 +111,32 @@ public class LevelManager : MonoBehaviour
 
     public void UseHint()
     {
-        gridManager.UseHint();
-        
+        if (hintNums_ > 0)
+        {
+            gridManager.UseHint();
+            hintNums_--;
+            SetHintText();
+        }
     }
 
     public void NextLevel()
     {
-
+        GameManager._instance.NextLevel();
     }
 
     public void PrevLevel()
     {
-
+        GameManager._instance.PrevLevel();
     }
 
     public void ResetLevel()
     {
-        
+        GameManager._instance.ToLevelScene();
     }
 
     public void BackToMenu()
     {
-
+        GameManager._instance.ToMenuScene();
     }
 
     public void SetLevel(TextAsset pack, int level, Color categoryColor)
@@ -271,7 +277,6 @@ public class LevelManager : MonoBehaviour
 
     LevelData levelData_;
     public GridManager gridManager;
-
     public GameObject finishPanel_;
 
     bool canPlay_ = true;
