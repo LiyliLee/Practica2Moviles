@@ -6,7 +6,7 @@ public class Cell : MonoBehaviour
 {
     void Start()
     {
-        transform.localScale = new Vector2(1, 1);
+        //transform.localScale = new Vector2(1, 1);
     }
     public void setCell(bool isflow, bool isEmpty, string color, int numCell)
     {
@@ -19,23 +19,31 @@ public class Cell : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().enabled = true;
             //Transformar el string hexadecimal del color a RGB 
-            GetComponent<SpriteRenderer>().color = getColorRGB(color_);
+            Color newcolor = getColorRGB(color_);
+            GetComponent<SpriteRenderer>().color = newcolor;
             isActive_ = true;
         }
     }
 
+    //Transforma un color en formato hexadecimal "XXXXXX" a valores RGB
     private Color getColorRGB(string color)
     {
         string rs = color_[0].ToString() + color_[1].ToString();
-        int r = System.Convert.ToInt32(rs, 16);
+        float r = (float)System.Convert.ToInt32(rs, 16)/255.0f;
         string gs = color_[2].ToString() + color_[3].ToString();
-        int g = System.Convert.ToInt32(gs, 16);
+        float g = (float)System.Convert.ToInt32(gs, 16)/255.0f;
         string bs = color_[4].ToString() + color_[5].ToString();
-        int b = System.Convert.ToInt32(bs, 16);
+        float b = (float)System.Convert.ToInt32(bs, 16)/255.0f;
         return new Color(r, g, b);
     }
 
-    public void setWalls(bool up, bool down, bool right, bool left)
+    // 0 arriba 1 abajo 2 izq 3 der
+    public bool getActiveWall(int num)
+    {
+        return walls_[num].active;
+    }
+
+    public void setWalls(bool up, bool down, bool left, bool right)
     {
         if (up) walls_[0].SetActive(true);
         if (down) walls_[1].SetActive(true);
@@ -45,19 +53,13 @@ public class Cell : MonoBehaviour
 
     public void setAWall(int wall, bool active)
     {
-        //0 up 1 down 2 left 3 right
+        //0 arriba 1 abajo 2 izq 3 der
         walls_[wall].SetActive(active);
     }
 
     public void setActivePath(int dir)
     {
-        //paths_[dir].GetComponent<SpriteRenderer>().color = prev_.GetComponent<SpriteRenderer>().color;
         paths_[dir].SetActive(true);
-    }
-
-    public void setPreviousCell(Cell c)
-    {
-        prev_ = c;
     }
 
     public void setColor(string color)
@@ -71,11 +73,6 @@ public class Cell : MonoBehaviour
             paths_[i].GetComponent<SpriteRenderer>().color = getColorRGB(color);
         }
         color_ = color;
-    }
-
-    public Cell getPreviousCell()
-    {
-        return prev_;
     }
 
     public void setActive(bool aux)
@@ -104,7 +101,8 @@ public class Cell : MonoBehaviour
             paths_[i].SetActive(false);
         }
 
-        isActive_ = false;
+        if(!isFlow_)
+            isActive_ = false;
     }
 
     public void ErasePath(int index)
@@ -118,17 +116,11 @@ public class Cell : MonoBehaviour
 
     private int numCell_;
 
-    //izq, der, arr, ab
     public GameObject[] walls_;
 
-    //arr, ab, izq, der
     public GameObject[] paths_;
 
-    //0 empty, 1 red, 2 blue, ...
     private string color_;
-
-    private Cell prev_, next_;
-
     
 
     public bool isFlow() { return isFlow_; }

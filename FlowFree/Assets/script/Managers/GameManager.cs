@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     {
         if (_instance != null)
         {
-            gridManager.CreateLevel(levelManager.CreateLevel(categories_[categoryToPlay].packs[packToPlay].levels, levelToPlay));
+            levelManager.SetLevel(categories_[categoryToPlay].packs[packToPlay].levels, levelToPlay, categories_[categoryToPlay].color);
 
             DestroyImmediate(gameObject);
             return;
@@ -47,8 +47,8 @@ public class GameManager : MonoBehaviour
             }
 
             player_ = DataSaver.LoadPlayerData(packNames);
-
-            levelManager.SetLevel(categories_[0].packs[0].levels, 2);*/
+            */
+            //levelManager.SetLevel(categories_[0].packs[0].levels, 5);
 
             SetupScene();
 
@@ -59,11 +59,6 @@ public class GameManager : MonoBehaviour
     public static GameManager GetInstance()
     {
         return _instance;
-    }
-
-    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
-    {
-        //grid_.ProcessInput(move, pos);
     }
 
     public CategoryLevel[] GetCategories() { return categories_; }
@@ -89,7 +84,7 @@ public class GameManager : MonoBehaviour
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(categories_[0].packs[0].levels, 2);
+            levelManager.SetLevel(categories_[2].packs[2].levels, 5, categories_[2].color);
 
         }
         else if (_instance._menuManager != null)
