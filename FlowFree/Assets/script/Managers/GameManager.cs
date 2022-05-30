@@ -31,14 +31,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (_instance != null)
-        {
-            levelManager.SetLevel(categories_[categoryToPlay].packs[packToPlay].levels, levelToPlay, categories_[categoryToPlay].color);
-
-            DestroyImmediate(gameObject);
-            return;
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
 
@@ -58,7 +51,6 @@ public class GameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
-
         else if (_instance != this)
         {
             _instance.levelManager = levelManager;
@@ -83,7 +75,7 @@ public class GameManager : MonoBehaviour
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(categories_[2].packs[2].levels, 5, categories_[2].color);
+            levelManager.SetLevel(_categories[2].packs[2].levels, 5, _categories[2].color);
 
         }
         else if (_instance._menuManager != null)
