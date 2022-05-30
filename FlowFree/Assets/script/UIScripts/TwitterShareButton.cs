@@ -5,9 +5,10 @@ using UnityEngine.Networking;
 
 public class TwitterShareButton : MonoBehaviour
 {
-     public string twitterNameParamter = "Este juego es lo mejor que me ha pasado en la vida.";
+     private string twitterNameParamter = "Este juego es lo mejor que me ha pasado en la vida. Ya me he pasado el nivel " + 
+        GameManager.GetInstance().GetLevelToPlay() + " del paquete " + GameManager.GetInstance().GetPackName();
      private const string TWITTER_ADDRESS = "http://twitter.com/intent/tweet";
-     public string LINK_GAME = "https://freesstylers.github.io/District-Dance-Battle/";
+     private string LINK_GAME = "https://freesstylers.github.io/District-Dance-Battle/";
 
      public void shareOnTwitter()
      {

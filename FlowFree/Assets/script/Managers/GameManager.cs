@@ -124,6 +124,16 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(_menuSceneName);
     }
 
+    public string GetPackName()
+    {
+        return _categories[_categoryToPlay].packs[_packToPlay].packName;
+    }
+
+    public int GetLevelToPlay()
+    {
+        return _levelToPlay;
+    }
+
     public void SetLevelToPlay(int level)
     {
         _levelToPlay = level;

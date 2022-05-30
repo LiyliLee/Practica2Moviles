@@ -173,7 +173,7 @@ public class LevelManager : MonoBehaviour
     public void SetPipeText()
     {
         float percentage = Mathf.Round(((float)count_ / (float)maxCount_)*100);
-        pipeText.text = "tuber�a: " + percentage + "%";
+        pipeText.text = "tuberia: " + percentage + "%";
     }
 
     public void SetFlowsText()
@@ -183,7 +183,7 @@ public class LevelManager : MonoBehaviour
 
     public void SetMovesText()
     {
-        movesText.text = "pasos: " + steps_ + " r�cord: " + GameManager.GetInstance().GetLevelMoves();
+        movesText.text = "pasos: " + steps_ + " record: " + GameManager.GetInstance().GetLevelMoves();
     }
 
     public void SetHintText()
