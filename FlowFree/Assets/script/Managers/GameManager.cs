@@ -21,6 +21,12 @@ public class GameManager : MonoBehaviour
     private int _categoryToPlay;
     private int _packToPlay;
     private int _levelToPlay;
+    private int categoryToPlay;
+    private int packToPlay;
+    private int levelToPlay;
+    private int levelsInPack_;
+    private int[][] packLevelsUnlocked;
+    private PackLevel _levelPack;
 
     private PlayerData _player;
     private bool _fromLevelScene = false;
@@ -45,8 +51,7 @@ public class GameManager : MonoBehaviour
             }
 
             _player = DataSaver.LoadPlayerData(packNames);
-
-            _instance.CreateScene();
+            levelManager.SetLevel(_categories[2].packs[2].levels, 5, _categories[2].color);
 
             DontDestroyOnLoad(gameObject);
         }
@@ -68,7 +73,88 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    private void CreateScene()
+    public CategoryLevel[] GetCategories() { return _categories; }
+    public int GetPackUnlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
+
+    private void OnApplicationQuit()
+    {
+        DataSaver.SavePlayerData(_player);
+    }
+
+    public PlayerData GetPlayerData() {
+        return _player;
+    }
+
+    public CategoryLevel GetCategory()
+    {
+        return _categories[categoryToPlay];
+    }
+
+    public PackLevel GetPack()
+    {
+        return _categories[categoryToPlay].packs[packToPlay];
+    }
+
+    public int GetLevelMoves()
+    {
+        return GetPlayerData()._moves[GetPack().packName][levelToPlay];
+    }
+
+    public void SetLevelMoves()
+    {
+        if(GetLevelMoves() == 0 || GetLevelMoves() > levelManager.GetSteps())
+            GetPlayerData()._moves[GetPack().packName][levelToPlay] = levelManager.GetSteps();
+    }
+
+    public void NextLevel()
+    {
+        if (levelsInPack_ > levelToPlay + 1)
+        {
+            levelToPlay++;
+            ToLevelScene();
+        }
+        else ToMenuScene();
+    }
+
+    public void PrevLevel()
+    {
+        if(levelToPlay > 0)
+        {
+            levelToPlay--;
+            ToLevelScene();
+        }
+    }
+
+    public void ToLevelScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+    public void ToMenuScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void SetLevelToPlay(int level)
+    {
+        levelToPlay = level;
+    }
+
+    public void SetCategoryToPlay(int category)
+    {
+        categoryToPlay = category;
+    }
+
+    public void SetPackToPlay(int pack)
+    {
+        packToPlay = pack;
+    }
+
+    public void SetLevelsInPack(int levels)
+    {
+        levelsInPack_ = levels;
+    }
+
+    private void SetupScene()
     {
         if (_instance.levelManager != null)
         {
@@ -83,10 +169,6 @@ public class GameManager : MonoBehaviour
             _instance._menuManager.Init(_categories[_categoryToPlay], _categories[_categoryToPlay].packs[_packToPlay],
                 _categories, _player._passedLevelInfo);
         }
-    }
-
-    public PlayerData GetPlayerData() {
-        return _instance._player;
     }
 
     public void AddHint()
@@ -116,6 +198,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int GetHints()
+    {
+        return _player._hints;
+    }
+
     public void LoadLevelScene()
     {
         SceneManager.LoadScene(_levelSceneName);
@@ -129,18 +216,18 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if(_levelToPlay < 149)
+        if(levelToPlay < 149)
         {
-            _levelToPlay += 1;
+            levelToPlay += 1;
             LoadLevelScene();
         }
     }
 
     public void LoadPreviousLevel()
     {
-        if (_levelToPlay > 0)
+        if (levelToPlay > 0)
         {
-            _levelToPlay -= 1;
+            levelToPlay -= 1;
             LoadLevelScene();
         }
     }
@@ -153,11 +240,6 @@ public class GameManager : MonoBehaviour
             return true;
         }
         else return false;
-    }
-
-    private void OnApplicationQuit()
-    {
-        DataSaver.SavePlayerData(_player);
     }
 
     private void OnApplicationFocus(bool focus)

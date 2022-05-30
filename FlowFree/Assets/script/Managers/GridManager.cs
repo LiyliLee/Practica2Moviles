@@ -14,6 +14,7 @@ public class GridManager : MonoBehaviour
         height_ = levelData_.height;
 
         board_ = new Cell[width_, height_];
+        //Lista de corrientes a rellenar
         currents_ = new List<List<Cell>>();
 
         //En vez de adaptar el casillero al tamaño, adaptamos la camara al tamaño del tablero
@@ -21,6 +22,7 @@ public class GridManager : MonoBehaviour
         if (cam.aspect * (cam.orthographicSize) < (float)width_ / 2)
             cam.orthographicSize = (width_ / (cam.aspect * 2));
 
+        //Contadores de casillas a rellenar
         levelManager_.SetMaxCount(0);
         levelManager_.SetCount(0);
 
@@ -101,9 +103,11 @@ public class GridManager : MonoBehaviour
         }
 
         levelManager_.SetFlowsCompleted(0);
+        //Activamos el input del jugador
         levelManager_.SetPlay(true);
     }
 
+    //Input del jugador
     public void setPlay(bool aux)
     {
         levelManager_.SetPlay(aux);
@@ -111,6 +115,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
+        //Si hay pulsacion y esta activado el input de juego
         if (Input.touchCount > 0 && levelManager_.GetCanPlay())
         {
             Touch touch = Input.GetTouch(0);
@@ -129,18 +134,19 @@ public class GridManager : MonoBehaviour
             if (logicX < 0 || logicX >= width_ || logicY < 0 || logicY >= height_)
                 return;
 
+            //Casilla pulsada
             Cell clicked = board_[logicX, logicY];
 
             if (lastFlowClicked_ == null && touch.phase == TouchPhase.Began)
             {
-                // Si no es flow
+                // Si no es flow y tiene camino, asignamos esa corriente a la que esta en uso
                 if (!clicked.isFlow() && clicked.getActive())
                 {
                     lastCurrent_ = GetCurrent(clicked);
                     lastFlowClicked_ = lastCurrent_.First();
                     if (lastFlowClicked_.isFlow()) lastFlowClicked_ = lastCurrent_.First();
                 }
-                // Si es un flow
+                // Si es un flow, limpiamos la corriente y la asignamos
                 else if (clicked.isFlow())
                 {
                     ClearCurrent(GetCurrent(clicked), 0);
@@ -148,6 +154,7 @@ public class GridManager : MonoBehaviour
                     lastCurrent_ = GetCurrent(lastFlowClicked_);
                     lastCurrent_.Add(clicked);
                 }
+                //Si es cualquier otra cosa (una pared), salimos
                 else
                     return;
 
@@ -156,7 +163,7 @@ public class GridManager : MonoBehaviour
                 if (aux)
                 {
                     levelManager_.AddSteps(1);
-                    levelManager_.SetMovesText(levelData_.numFlows);
+                    levelManager_.SetMovesText();
                 }
                 if (aux || lastColorClicked_ == lastFlowClicked_.getColor())
                 {
@@ -205,6 +212,7 @@ public class GridManager : MonoBehaviour
                 //Desconectamos las casillas de la corriente desde la que hemos pulsado hacia delante
                 List<Cell> eraseCells = lastCurrent_.GetRange(index + 1, lastCurrent_.Count - (index + 1));
 
+                //Si la casilla pulsada es parte de un camino, limpiamos la corriente hasta dicha casilla
                 if (index >= 0)
                     ClearCurrent(lastCurrent_, index + 1);
 
@@ -219,6 +227,7 @@ public class GridManager : MonoBehaviour
         if (previousCurrent != null && !previousCurrent.Contains(clicked))
             previousCurrent = null;
 
+        //Añadimos la casilla pulsada a la ultima corriente pulsada, si se consigue hacer, comprobamos la victoria
         if (AddCellToCurrent(clicked, ref lastCurrent_))
         {
             //Comprobamos si todas las casillas y las corrientes estan completas
@@ -263,11 +272,13 @@ public class GridManager : MonoBehaviour
             else aux = false;
             i++;
         }
+        //Tambien utilizamos este metodo para actualizar el contador de corrientes completadas
         if(flows!=prevFlows)
         {
             levelManager_.SetFlowsCompleted(flows);
             levelManager_.SetFlowsText();
         }
+        //Si no ha encontrado ninguna corriente no completa, es que el nivel esta completo
         if (aux)
         {
             levelManager_.Win();
@@ -291,7 +302,7 @@ public class GridManager : MonoBehaviour
             i++;
         }
 
-        //Si es asi, 
+        //Si es asi, comprobamos si la casilla estaba en la corriente, si no, la conecta
         if(aux)
         {
             List<Cell> curr1 = currents_[i - 1];
@@ -495,15 +506,17 @@ public class GridManager : MonoBehaviour
 
         //Primero limpiamos la corriente que vamos a rellenar con la pista
         List<Cell> hintCurrent = currents_[hintNum];
-
         if(hintCurrent.Count>1)
             ClearCurrent(hintCurrent, 0);
+
+        //Asignamos la corriente que acaba de completar la pista y la vamos rellenando
         lastCurrent_ = hintCurrent;
         lastFlowClicked_ = board_[hint[0] % width_, hint[0] / width_];
         hintCurrent.Add(board_[hint[0] % width_, hint[0] / width_]);
         for(int i = 0; i < hint.Count;i++)
         {
             Cell cell = board_[hint[i] % width_, hint[i] / width_];
+            //Si una de las casillas de la pista esta en uso, limpiamos su corriente hasta ese punto, y despues la añadimos
             if(cell.getActive())
             {
                 List<Cell> cellCurrent = GetCurrent(cell);

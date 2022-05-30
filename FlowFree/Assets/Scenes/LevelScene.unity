@@ -2598,7 +2598,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1013746299}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1454912216}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1013746299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3759,6 +3771,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425021429}
   m_CullTransparentMesh: 1
+--- !u!1 &1454912216 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6008392620751290244, guid: 5f64f4155c8397f4e87f16b99d0408e1, type: 3}
+  m_PrefabInstance: {fileID: 6008392620773639100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1463430197
 GameObject:
   m_ObjectHideFlags: 0
@@ -5011,7 +5028,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2084233423}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1784959945}
+        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+        m_MethodName: NextLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2084233423
 MonoBehaviour:
   m_ObjectHideFlags: 0

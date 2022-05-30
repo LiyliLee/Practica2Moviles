@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class LevelManager : MonoBehaviour
@@ -24,6 +25,7 @@ public class LevelManager : MonoBehaviour
         string packText = pack.text;
 
         string[] levels = packText.Split('\n');
+        GameManager.GetInstance().SetLevelsInPack(levels.Length);
 
         string[] level = levels[levelToPlay].Split(';');
         string[] cabecera = level[0].Split(',');
@@ -109,28 +111,32 @@ public class LevelManager : MonoBehaviour
 
     public void UseHint()
     {
-        gridManager.UseHint();
-        
+        if (GameManager.GetInstance().GetHints() > 0)
+        {
+            gridManager.UseHint();
+            GameManager.GetInstance().DecreaseHint();
+            SetHintText();
+        }
     }
 
     public void NextLevel()
     {
-        GameManager.GetInstance().LoadNextLevel();
+        GameManager.GetInstance().NextLevel();
     }
 
     public void PrevLevel()
     {
-        GameManager.GetInstance().LoadPreviousLevel();
+        GameManager.GetInstance().PrevLevel();
     }
 
     public void ResetLevel()
     {
-        GameManager.GetInstance().LoadLevelScene();
+        GameManager.GetInstance().ToLevelScene();
     }
 
     public void BackToMenu()
     {
-        GameManager.GetInstance().LoadMenu();
+        GameManager.GetInstance().ToMenuScene();
     }
 
     public void SetLevel(TextAsset pack, int level, Color categoryColor)
@@ -139,11 +145,10 @@ public class LevelManager : MonoBehaviour
         gridManager.CreateLevel(levelData_);
 
         SetSteps(0);
-        SetHintNum(3);
 
         SetFlowsText();
         SetPipeText();
-        SetMovesText(levelData_.numFlows);
+        SetMovesText();
         SetHintText();
         categoryColor_ = categoryColor;
         SetLevelText(level + 1, levelData_.width, levelData_.height, categoryColor_);
@@ -154,6 +159,7 @@ public class LevelManager : MonoBehaviour
         finishPanel_.SetActive(true);
         finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(GetSteps() == levelData_.numFlows, GetSteps());
         canPlay_ = false;
+        GameManager.GetInstance().SetLevelMoves();
     }
 
     public void SetPlay(bool aux)
@@ -164,7 +170,7 @@ public class LevelManager : MonoBehaviour
     public void SetPipeText()
     {
         float percentage = Mathf.Round(((float)count_ / (float)maxCount_)*100);
-        pipeText.text = "tubería: " + percentage + "%";
+        pipeText.text = "tuberï¿½a: " + percentage + "%";
     }
 
     public void SetFlowsText()
@@ -172,14 +178,14 @@ public class LevelManager : MonoBehaviour
         flowsText.text = "flujos: " + flowsCompleted_ + "/" + levelData_.numFlows;
     }
 
-    public void SetMovesText(int best)
+    public void SetMovesText()
     {
-        movesText.text = "pasos: " + steps_ + " récord: " + best;
+        movesText.text = "pasos: " + steps_ + " rï¿½cord: " + GameManager.GetInstance().GetLevelMoves();
     }
 
     public void SetHintText()
     {
-        hintText.text = hintNums_ + " x";
+        hintText.text = GameManager.GetInstance().GetPlayerData()._hints + " x";
     }
 
     public void SetLevelText(int level, int width, int height, Color color)
@@ -271,7 +277,6 @@ public class LevelManager : MonoBehaviour
 
     LevelData levelData_;
     public GridManager gridManager;
-
     public GameObject finishPanel_;
 
     bool canPlay_ = true;
