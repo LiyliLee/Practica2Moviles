@@ -9,15 +9,13 @@ public struct PlayerData
 {
     public enum PassedLevelInfo { NO, PASSED, PERFECT };
 
-    public int _level;
     public Dictionary<string, PassedLevelInfo[]> _passedLevelInfo; // niveles completados por pack
     public Dictionary<string, int[]> _moves; // numero de movimientos por nivel
     public int _hints; // numero de pistas
     public bool _premium; // usuario sin anuncios
 
-    public PlayerData(int level, Dictionary<string, PassedLevelInfo[]> passed, Dictionary<string, int[]> moves, int hints, bool premium)
+    public PlayerData(Dictionary<string, PassedLevelInfo[]> passed, Dictionary<string, int[]> moves, int hints, bool premium)
     {
-        _level = level;
         _passedLevelInfo = passed;
         _moves = moves;
         _hints = hints;
@@ -50,7 +48,7 @@ public class DataSaver
             moves.Add(packs[i], new int[150]);
         }
 
-        return new PlayerData(0, completed, moves, 0, false);
+        return new PlayerData(completed, moves, 0, false);
 
     }
     public static PlayerData LoadPlayerData(List<string> packs)

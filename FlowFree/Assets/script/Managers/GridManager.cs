@@ -163,7 +163,7 @@ public class GridManager : MonoBehaviour
                 if (aux)
                 {
                     levelManager_.AddSteps(1);
-                    levelManager_.SetMovesText(levelData_.numFlows);
+                    levelManager_.SetMovesText();
                 }
                 if (aux || lastColorClicked_ == lastFlowClicked_.getColor())
                 {
@@ -506,15 +506,17 @@ public class GridManager : MonoBehaviour
 
         //Primero limpiamos la corriente que vamos a rellenar con la pista
         List<Cell> hintCurrent = currents_[hintNum];
-
         if(hintCurrent.Count>1)
             ClearCurrent(hintCurrent, 0);
+
+        //Asignamos la corriente que acaba de completar la pista y la vamos rellenando
         lastCurrent_ = hintCurrent;
         lastFlowClicked_ = board_[hint[0] % width_, hint[0] / width_];
         hintCurrent.Add(board_[hint[0] % width_, hint[0] / width_]);
         for(int i = 0; i < hint.Count;i++)
         {
             Cell cell = board_[hint[i] % width_, hint[i] / width_];
+            //Si una de las casillas de la pista esta en uso, limpiamos su corriente hasta ese punto, y despues la añadimos
             if(cell.getActive())
             {
                 List<Cell> cellCurrent = GetCurrent(cell);

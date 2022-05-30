@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
         string packText = pack.text;
 
         string[] levels = packText.Split('\n');
-        GameManager._instance.SetLevelsInPack(levels.Length);
+        GameManager.GetInstance().SetLevelsInPack(levels.Length);
 
         string[] level = levels[levelToPlay].Split(';');
         string[] cabecera = level[0].Split(',');
@@ -111,32 +111,32 @@ public class LevelManager : MonoBehaviour
 
     public void UseHint()
     {
-        if (hintNums_ > 0)
+        if (GameManager.GetInstance().GetHints() > 0)
         {
             gridManager.UseHint();
-            hintNums_--;
+            GameManager.GetInstance().DecreaseHint();
             SetHintText();
         }
     }
 
     public void NextLevel()
     {
-        GameManager._instance.NextLevel();
+        GameManager.GetInstance().NextLevel();
     }
 
     public void PrevLevel()
     {
-        GameManager._instance.PrevLevel();
+        GameManager.GetInstance().PrevLevel();
     }
 
     public void ResetLevel()
     {
-        GameManager._instance.ToLevelScene();
+        GameManager.GetInstance().ToLevelScene();
     }
 
     public void BackToMenu()
     {
-        GameManager._instance.ToMenuScene();
+        GameManager.GetInstance().ToMenuScene();
     }
 
     public void SetLevel(TextAsset pack, int level, Color categoryColor)
@@ -145,11 +145,10 @@ public class LevelManager : MonoBehaviour
         gridManager.CreateLevel(levelData_);
 
         SetSteps(0);
-        SetHintNum(3);
 
         SetFlowsText();
         SetPipeText();
-        SetMovesText(levelData_.numFlows);
+        SetMovesText();
         SetHintText();
         categoryColor_ = categoryColor;
         SetLevelText(level, levelData_.width, levelData_.height, categoryColor_);
@@ -160,6 +159,7 @@ public class LevelManager : MonoBehaviour
         finishPanel_.SetActive(true);
         finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(GetSteps() == levelData_.numFlows, GetSteps());
         canPlay_ = false;
+        GameManager.GetInstance().SetLevelMoves();
     }
 
     public void SetPlay(bool aux)
@@ -178,14 +178,14 @@ public class LevelManager : MonoBehaviour
         flowsText.text = "flujos: " + flowsCompleted_ + "/" + levelData_.numFlows;
     }
 
-    public void SetMovesText(int best)
+    public void SetMovesText()
     {
-        movesText.text = "pasos: " + steps_ + " récord: " + best;
+        movesText.text = "pasos: " + steps_ + " récord: " + GameManager.GetInstance().GetLevelMoves();
     }
 
     public void SetHintText()
     {
-        hintText.text = hintNums_ + " x";
+        hintText.text = GameManager.GetInstance().GetPlayerData()._hints + " x";
     }
 
     public void SetLevelText(int level, int width, int height, Color color)

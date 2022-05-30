@@ -48,8 +48,7 @@ public class GameManager : MonoBehaviour
             }
 
             _player = DataSaver.LoadPlayerData(packNames);
-
-            _instance.CreateScene();
+            levelManager.SetLevel(_categories[2].packs[2].levels, 5, _categories[2].color);
 
             DontDestroyOnLoad(gameObject);
         }
@@ -59,7 +58,7 @@ public class GameManager : MonoBehaviour
             _instance._menuManager = _menuManager;
             _instance.gridManager = gridManager;
 
-            gridManager.CreateLevel(levelManager.CreateLevel(_categories[_categoryToPlay].packs[_packToPlay].levels, _levelToPlay));
+            levelManager.SetLevel(_categories[categoryToPlay].packs[packToPlay].levels, levelToPlay, _categories[categoryToPlay].color);
 
             DestroyImmediate(gameObject);
             return;
@@ -72,21 +71,37 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    public CategoryLevel[] GetCategories() { return categories_; }
+    public CategoryLevel[] GetCategories() { return _categories; }
     public int GetPackUnlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
 
     private void OnApplicationQuit()
     {
-        DataSaver.SavePlayerData(player_);
+        DataSaver.SavePlayerData(_player);
     }
 
     public PlayerData GetPlayerData() {
-        return GetInstance().player_;
+        return _player;
     }
 
-    public void AddHint()
+    public CategoryLevel GetCategory()
     {
-        levelManager.AddHintNum(1);
+        return _categories[categoryToPlay];
+    }
+
+    public PackLevel GetPack()
+    {
+        return _categories[categoryToPlay].packs[packToPlay];
+    }
+
+    public int GetLevelMoves()
+    {
+        return GetPlayerData()._moves[GetPack().packName][levelToPlay];
+    }
+
+    public void SetLevelMoves()
+    {
+        if(GetLevelMoves() == 0 || GetLevelMoves() > levelManager.GetSteps())
+            GetPlayerData()._moves[GetPack().packName][levelToPlay] = levelManager.GetSteps();
     }
 
     public void NextLevel()
@@ -142,18 +157,14 @@ public class GameManager : MonoBehaviour
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(categories_[2].packs[0].levels, 5, categories_[2].color);
+            levelManager.SetLevel(_categories[2].packs[0].levels, 5, _categories[2].color);
 
         }
         else if (_instance._menuManager != null)
         {
             // se carga menu
-            _instance._menuManager.Init(_categories[_categoryToPlay], _levelPack, _categories, _player._passedLevelInfo);
+            _instance._menuManager.Init(_categories[categoryToPlay], _levelPack, _categories, _player._passedLevelInfo);
         }
-    }
-
-    public PlayerData GetPlayerData() {
-        return _instance._player;
     }
 
     public void AddHint()
@@ -165,6 +176,11 @@ public class GameManager : MonoBehaviour
     {
         _player._hints--;
     }   
+
+    public int GetHints()
+    {
+        return _player._hints;
+    }
 
     public void LoadLevelScene()
     {
@@ -180,18 +196,18 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if(_levelToPlay < 149)
+        if(levelToPlay < 149)
         {
-            _levelToPlay += 1;
+            levelToPlay += 1;
             LoadLevelScene();
         }
     }
 
     public void LoadPreviousLevel()
     {
-        if (_levelToPlay > 0)
+        if (levelToPlay > 0)
         {
-            _levelToPlay -= 1;
+            levelToPlay -= 1;
             LoadLevelScene();
         }
     }
@@ -204,11 +220,6 @@ public class GameManager : MonoBehaviour
             return true;
         }
         else return false;
-    }
-
-    private void OnApplicationQuit()
-    {
-        DataSaver.SavePlayerData(_player);
     }
 
     private void OnApplicationFocus(bool focus)
