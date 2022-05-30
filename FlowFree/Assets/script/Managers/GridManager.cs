@@ -21,22 +21,21 @@ public class GridManager : MonoBehaviour
         if (cam.aspect * (cam.orthographicSize) < (float)width_ / 2)
             cam.orthographicSize = (width_ / (cam.aspect * 2));
 
-        maxCount_ = 0;
-        count_ = 0;
+        levelManager_.SetMaxCount(0);
+        levelManager_.SetCount(0);
 
         //Todas las casillas
         for(int i = 0; i < width_*height_; i++)
         {
             float realPosX, realPosY;
-            float offset;
-            if (width_ % 2 == 1) offset = width_ / 2;
-            else offset = width_ / 2 - 0.5f;
-            realPosX = i%width_ - offset;
-            realPosY = offset - i/width_;
+            float offsetX = (float)(width_ % 2 == 1 ? (int)(width_ / 2) : (int)(width_ / 2) - 0.5);
+            float offsetY = (float)(height_ % 2 == 1 ? (int)(height_ / 2) : (int)(height_ / 2) - 0.5);
+            realPosX = i % width_ - offsetX;
+            realPosY = offsetY - i / width_;
             board_[i % width_, i / width_] = Instantiate(cellPrefab_, new Vector3(realPosX, realPosY, 0), Quaternion.identity, transform).GetComponent<Cell>();
             board_[i % width_, i / width_].setCell(false, false, "000000", i);
-            board_[i % width_, i / width_].setWalls(i / width_ == 0, i / width_ == width_ - 1, i % height_ == height_ - 1, i % height_ == 0);
-            maxCount_++;
+            board_[i % width_, i / width_].setWalls(i < width_, i >= width_*(height_-1), i % width_ == 0, (i+1) % width_ == 0);
+            levelManager_.AddMaxCount(1);
         }
 
         //Flows
@@ -47,18 +46,25 @@ public class GridManager : MonoBehaviour
             board_[cell1 % width_, cell1 / width_].setCell(true, false, colors_[i], cell1);
             board_[cell2 % width_, cell2 / width_].setCell(true, false, colors_[i], cell1);
             currents_.Add(new List<Cell>());
-            maxCount_--;
-            maxCount_--;
+            levelManager_.AddMaxCount(-2);
         }
 
         //Vacios
         if (levelData_.emptys_ != null)
         {
+            //Formamos los vacios
             for (int i = 0; i < levelData_.emptys_.Length; i++)
             {
                 int cell1 = levelData_.emptys_[i];
                 board_[cell1 % width_, cell1 / width_].setCell(false, true, "000000", cell1);
-                board_[cell1 % width_, cell1 / width_].setWalls(cell1 / width_ == 0, cell1 / width_ == width_ - 1, cell1 % height_ == height_ - 1, cell1 % height_ == 0);
+                levelManager_.AddMaxCount(-1);
+            }
+            //Recorremos otra vez la lista porque necesitamos que primero se formen para despues
+            //hacer las comprobaciones de si las adyacencias son vacios o no
+            for (int i = 0; i < levelData_.emptys_.Length; i++)
+            {
+                int cell1 = levelData_.emptys_[i];
+                SetEmptyWalls(board_[cell1 % width_, cell1 / width_]);
             }
         }
 
@@ -94,6 +100,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        levelManager_.SetFlowsCompleted(0);
         levelManager_.SetPlay(true);
     }
 
@@ -148,8 +155,8 @@ public class GridManager : MonoBehaviour
                 bool aux = (pastCurrents_ == null) || (lastColorClicked_ != lastFlowClicked_.getColor());
                 if (aux)
                 {
-                    steps_++;
-                    levelManager_.SetMovesText(steps_, getNumFlows());
+                    levelManager_.AddSteps(1);
+                    levelManager_.SetMovesText(levelData_.numFlows);
                 }
                 if (aux || lastColorClicked_ == lastFlowClicked_.getColor())
                 {
@@ -180,8 +187,8 @@ public class GridManager : MonoBehaviour
     
     private void Advance(Cell clicked)
     {
-        //Si es flow de otro color
-        if (clicked.isFlow() && clicked.getColor() != lastFlowClicked_.getColor())
+        //Si es flow de otro color, un vacio o hay una pared de por medio
+        if ((clicked.isFlow() && clicked.getColor() != lastFlowClicked_.getColor()) || clicked.isEmpty() || CheckForWalls(clicked))
         {
             lastFlowClicked_ = null;
             lastCurrent_ = null;
@@ -212,27 +219,54 @@ public class GridManager : MonoBehaviour
         if (previousCurrent != null && !previousCurrent.Contains(clicked))
             previousCurrent = null;
 
-        AddCellToCurrent(clicked, ref lastCurrent_);
-        
-        //Comprobamos si todas las casillas y las corrientes estan completas
-        CheckWin();
+        if (AddCellToCurrent(clicked, ref lastCurrent_))
+        {
+            //Comprobamos si todas las casillas y las corrientes estan completas
+            CheckWin();
+        }
+    }
+
+    //Metodo para ver si la casilla pulsada esta al otro lado de un muro
+    bool CheckForWalls(Cell cell)
+    {
+        Cell lastCell = lastCurrent_.Last();
+
+        int cellNum = cell.getNum();
+        int lastCellNum = lastCell.getNum();
+
+        //Comprobamos la posicion de la ultima casilla de la corriente y la pared correspondiente a su posicion
+        bool ret = (lastCellNum == cellNum - width_ && cell.getActiveWall(0)) ||
+            (lastCellNum == cellNum + width_ && cell.getActiveWall(1)) ||
+            (lastCellNum == cellNum - 1 && cell.getActiveWall(2)) ||
+            (lastCellNum == cellNum + 1 && cell.getActiveWall(3));
+
+        return ret;
     }
 
     void CheckWin()
     {
         int i = 0;
         bool aux = true;
+        int flows = 0;
+        int prevFlows = levelManager_.GetFlowsCompleted();
         //Si en todas las corrientes la primera y la ultima casilla son flows
-        while(i < currents_.Count && aux)
+        while(i < currents_.Count)
         {
             if (currents_[i].Count > 2)
             {
                 if (currents_[i].First().isFlow() && currents_[i].Last().isFlow())
-                    aux = true;
+                {
+                    flows++;
+                }
                 else aux = false;
             }
             else aux = false;
             i++;
+        }
+        if(flows!=prevFlows)
+        {
+            levelManager_.SetFlowsCompleted(flows);
+            levelManager_.SetFlowsText();
         }
         if (aux)
         {
@@ -278,8 +312,10 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void AddCellToCurrent(Cell clicked, ref List<Cell> current)
+    private bool AddCellToCurrent(Cell clicked, ref List<Cell> current)
     {
+        //Auxiliar para comprobar si se ha añadido una casilla
+        bool aux = false;
         //Si no lo tiene
         if (!current.Contains(clicked))
         {
@@ -295,11 +331,13 @@ public class GridManager : MonoBehaviour
                     clicked.setActive(true);
                     //Si conectamos con un flow, no contamos el paso, ya que su casilla ya estaba rellena
                     if (!clicked.isFlow())
-                        count_++;
-                    levelManager_.SetPipeText(count_, maxCount_);
+                        levelManager_.AddCount(1);
+                    levelManager_.SetPipeText();
+                    aux = true;
                 }
             }
         }
+        return aux;
     }
 
     void ConnectCells(Cell from, Cell to)
@@ -360,8 +398,8 @@ public class GridManager : MonoBehaviour
             current[i].DisconnectCell();
             if (!current[i].isFlow())
             {
-                count_--;
-                levelManager_.SetPipeText(count_, maxCount_);
+                levelManager_.AddCount(-1);
+                levelManager_.SetPipeText();
             }
         }
 
@@ -395,14 +433,86 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public int getSteps()
+    void SetEmptyWalls(Cell cell)
     {
-        return steps_;
+        int cellnum = cell.getNum();
+        if ((cellnum + 1) % width_ == 0) cell.setAWall(3, false);
+        //Paredes por adyacencia a casillas u otros vacios
+        //Comprobacion arriba
+        if (cellnum < width_)
+        {
+            cell.setAWall(0, false);
+        }
+        else
+        {
+            if(!board_[(cellnum-width_)%width_, (cellnum-width_)/width_].isEmpty()) cell.setAWall(0, true);
+        }
+        //Comprobacion abajo
+        if (cellnum >= width_ * (height_ - 1))
+        {
+            cell.setAWall(1, false);
+        }
+        else
+        {
+            if (!board_[(cellnum + width_) % width_, (cellnum + width_) / width_].isEmpty()) cell.setAWall(1, true);
+        }
+        //Comprobacion izquierda
+        if (cellnum % width_ == 0)
+        {
+            cell.setAWall(2, false);
+        }
+        else
+        {
+            if (!board_[(cellnum-1) % width_, (cellnum-1) / width_].isEmpty()) cell.setAWall(2, true);
+        }
+        //Comprobacion derecha
+        if ((cellnum + 1) % width_ == 0)
+        {
+            cell.setAWall(3, false);
+        }
+        else
+        {
+            if (!board_[(cellnum + 1) % width_, (cellnum + 1) / width_].isEmpty()) cell.setAWall(3, true);
+        }
     }
 
-    public int getNumFlows()
+    public void UseHint()
     {
-        return levelData_.numFlows;
+        bool aux = false;
+        int solNum = 0;
+        int hintNum = 0;
+        while (solNum < levelData_.solutions_.Length && !aux)
+        {
+            hintNum = UnityEngine.Random.Range(0, levelData_.solutions_.Length);
+            if(currents_[hintNum].Count <=1 || (currents_[hintNum].Count>1 && !currents_[hintNum].Last().isFlow()))
+            {
+                aux = true;
+            }
+            solNum++;
+        }
+        if (!aux) return;
+        List<int> hint = levelData_.solutions_[hintNum];
+
+        //Primero limpiamos la corriente que vamos a rellenar con la pista
+        List<Cell> hintCurrent = currents_[hintNum];
+
+        if(hintCurrent.Count>1)
+            ClearCurrent(hintCurrent, 0);
+        lastCurrent_ = hintCurrent;
+        lastFlowClicked_ = board_[hint[0] % width_, hint[0] / width_];
+        hintCurrent.Add(board_[hint[0] % width_, hint[0] / width_]);
+        for(int i = 0; i < hint.Count;i++)
+        {
+            Cell cell = board_[hint[i] % width_, hint[i] / width_];
+            if(cell.getActive())
+            {
+                List<Cell> cellCurrent = GetCurrent(cell);
+                if(cellCurrent.Count>0 && !cell.isFlow())
+                    ClearCurrent(cellCurrent, cellCurrent.FindIndex(cell1 => cell1 == cell));
+            }
+            AddCellToCurrent(cell, ref hintCurrent);
+        }
+        CheckWin();
     }
 
     int width_, height_;
@@ -422,12 +532,6 @@ public class GridManager : MonoBehaviour
 
     public Camera cam;
 
-    int maxCount_;
-    int count_;
-    int steps_;
-
-    private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000",
-        "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F",
-        "008080", "FE7CEC"};
+    private string[] colors_ = {"FF0000", "008D00", "0C29FE", "EAE000", "FB8900", "00FFFF", "FF0AC9", "A52A2A", "800080", "FFFFFF", "9F9FBD", "00FF00", "A18A51", "09199F", "008080", "FE7CEC"};
 
 }

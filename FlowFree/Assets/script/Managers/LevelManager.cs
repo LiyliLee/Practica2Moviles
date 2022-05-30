@@ -32,47 +32,62 @@ public class LevelManager : MonoBehaviour
         string tamanho = cabecera[0];
 
         string[] tam = tamanho.Split(':');
-        if(tam.Length == 1)
+        if (tam.Length == 1)
         {
             levelData.width = int.Parse(tam[0]);
             levelData.height = int.Parse(tam[0]);
         } else {
             levelData.width = int.Parse(tam[0]);
-            levelData.height = int.Parse(tam[1]);
+            if (tam[1].Length < 2)
+                levelData.height = int.Parse(tam[1]);
+            else
+            {
+                if (tam[1].Length == 3)
+                    levelData.height = int.Parse(tam[1][0].ToString());
+                else levelData.height = int.Parse((tam[1][0].ToString() + tam[1][0].ToString()));
+            }
         }
 
         levelData.numFlows = int.Parse(cabecera[3]);
 
         //Puentes
-        if(cabecera.Length > 4)
+        if (cabecera.Length > 4)
         {
-            string[] bridges = level[4].Split(':');
-            levelData.bridges_ = new int[bridges.Length];
-            for(int i = 0; i < bridges.Length; i++)
+            if (cabecera[4] != "")
             {
-                levelData.bridges_[i] = int.Parse(bridges[i]);
+                string[] bridges = cabecera[4].Split(':');
+                levelData.bridges_ = new int[bridges.Length];
+                for (int i = 0; i < bridges.Length; i++)
+                {
+                    levelData.bridges_[i] = int.Parse(bridges[i]);
+                }
             }
         }
         //Huecos
         if (cabecera.Length > 5)
         {
-            string[] emptys = level[5].Split(':');
-            levelData.emptys_ = new int[emptys.Length];
-            for (int i = 0; i < emptys.Length; i++)
-            {
-                levelData.emptys_[i] = emptys[i][0] - '0';
+            if (cabecera[5] != "") {
+                string[] emptys = cabecera[5].Split(':');
+                levelData.emptys_ = new int[emptys.Length];
+                for (int i = 0; i < emptys.Length; i++)
+                {
+                    levelData.emptys_[i] = int.Parse(emptys[i]);
+                }
             }
         }
         //Paredes
         if (cabecera.Length > 6)
         {
-            string[] walls = level[6].Split(':');
-            levelData.wall_ = new Vector2[walls.Length];
-            for (int i = 0; i < walls.Length; i++)
+            if (cabecera[6] != "")
             {
-                string[] wallaux = walls[i].Split('|');
-                levelData.wall_[i].x = int.Parse(wallaux[0]);
-                levelData.wall_[i].y = int.Parse(wallaux[1]);
+                string[] walls = cabecera[6].Split(':');
+                levelData.wall_ = new Vector2[walls.Length];
+                for (int i = 0; i < walls.Length; i++)
+                {
+                    string[] wallaux = walls[i].Split('|');
+                    levelData.wall_[i].x = int.Parse(wallaux[0]);
+                    levelData.wall_[i].y = int.Parse(wallaux[1]);
+                }
             }
         }
 
@@ -91,20 +106,53 @@ public class LevelManager : MonoBehaviour
 
         return levelData;
     }
-    public void SetLevel(TextAsset pack, int level)
+
+    public void UseHint()
+    {
+        gridManager.UseHint();
+        
+    }
+
+    public void NextLevel()
+    {
+
+    }
+
+    public void PrevLevel()
+    {
+
+    }
+
+    public void ResetLevel()
+    {
+        
+    }
+
+    public void BackToMenu()
+    {
+
+    }
+
+    public void SetLevel(TextAsset pack, int level, Color categoryColor)
     {
         levelData_ = CreateLevel(pack, level);
         gridManager.CreateLevel(levelData_);
-        SetFlowsText(0, levelData_.numFlows);
-        SetPipeText(0, 1);
-        SetMovesText(0, levelData_.numFlows);
-        SetHintText(3);
+
+        SetSteps(0);
+        SetHintNum(3);
+
+        SetFlowsText();
+        SetPipeText();
+        SetMovesText(levelData_.numFlows);
+        SetHintText();
+        categoryColor_ = categoryColor;
+        SetLevelText(level, levelData_.width, levelData_.height, categoryColor_);
     }
 
     public void Win()
     {
         finishPanel_.SetActive(true);
-        finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(gridManager.getSteps() == gridManager.getNumFlows(), gridManager.getSteps());
+        finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(GetSteps() == levelData_.numFlows, GetSteps());
         canPlay_ = false;
     }
 
@@ -113,25 +161,32 @@ public class LevelManager : MonoBehaviour
         canPlay_ = aux;
     }
 
-    public void SetPipeText(int count, int maxCount)
+    public void SetPipeText()
     {
-        float percentage = Mathf.Round(((float)count / (float)maxCount)*100);
+        float percentage = Mathf.Round(((float)count_ / (float)maxCount_)*100);
         pipeText.text = "tubería: " + percentage + "%";
     }
 
-    public void SetFlowsText(int completed, int total)
+    public void SetFlowsText()
     {
-        flowsText.text = "flujos: " + completed + "/" + total;
+        flowsText.text = "flujos: " + flowsCompleted_ + "/" + levelData_.numFlows;
     }
 
-    public void SetMovesText(int moves, int best)
+    public void SetMovesText(int best)
     {
-        movesText.text = "pasos: " + moves + " récord: " + best;
+        movesText.text = "pasos: " + steps_ + " récord: " + best;
     }
 
-    public void SetHintText(int hints)
+    public void SetHintText()
     {
-        hintText.text = hints + " x";
+        hintText.text = hintNums_ + " x";
+    }
+
+    public void SetLevelText(int level, int width, int height, Color color)
+    {
+        levelText.text = "nivel " + level;
+        levelText.color = color;
+        sizeText.text = width + "x" + height;
     }
 
     public bool GetCanPlay()
@@ -139,12 +194,96 @@ public class LevelManager : MonoBehaviour
         return canPlay_;
     }
 
+    #region Getters y setters
+    public int GetMaxCount()
+    {
+        return maxCount_;
+    }
+
+    public int GetCount()
+    {
+        return count_;
+    }
+
+    public int GetSteps()
+    {
+        return steps_;
+    }
+
+    public int GetFlowsCompleted()
+    {
+        return flowsCompleted_;
+    }
+
+    public int GetHintNum()
+    {
+        return hintNums_;
+    }
+    public void SetMaxCount(int aux)
+    {
+        maxCount_ = aux;
+    }
+
+    public void SetCount(int aux)
+    {
+        count_ = aux;
+    }
+
+    public void SetSteps(int aux)
+    {
+        steps_ = aux;
+    }
+
+    public void SetFlowsCompleted(int aux)
+    {
+        flowsCompleted_ = aux;
+    }
+
+    public void SetHintNum(int aux)
+    {
+        hintNums_ = aux;
+    }
+
+    public void AddMaxCount(int aux)
+    {
+        maxCount_ += aux;
+    }
+
+    public void AddCount(int aux)
+    {
+        count_ += aux;
+    }
+
+    public void AddSteps(int aux)
+    {
+        steps_ += aux;
+    }
+    public void AddFlowsCompleted(int aux)
+    {
+        flowsCompleted_ += aux;
+    }
+    public void AddHintNum(int aux)
+    {
+        hintNums_ += aux;
+    }
+
+    #endregion
+
     LevelData levelData_;
     public GridManager gridManager;
 
     public GameObject finishPanel_;
 
     bool canPlay_ = true;
+
+    Color categoryColor_;
+
+    int maxCount_;
+    int count_;
+    int steps_;
+
+    int flowsCompleted_;
+    int hintNums_;
 
     // Textos de progresion de nivel
     public TextMeshProUGUI levelText;
