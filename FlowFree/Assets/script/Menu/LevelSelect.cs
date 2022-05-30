@@ -6,35 +6,41 @@ using TMPro;
 
 public class LevelSelect : MonoBehaviour
 {
-    public HorizontalLayoutGroup horizontalLayout = null;
-    public TextMeshProUGUI _packName = null;
+    public HorizontalLayoutGroup _horizontalLayout = null;
+    public TextMeshProUGUI _packNameText = null;
 
-    //public LevelGroup _levelPrefab = null;
+    public LevelPage _levelPagePrefab = null;
 
     private const int LEVELS_PER_PAGE = 30;
     private int _nLevels = 150;
-    private string _packageName;
-    //private LevelGroup[] _levels;
+    private string _categoryName;
+    private LevelPage[] _levels;
+    private Color _packColor;
+    private PlayerData.PassedLevelInfo[] _completeMarkers;
 
-    // Start is called before the first frame update
-    void Start()
+    public void SetPackData(Color c, string packName, string categoryName, PlayerData.PassedLevelInfo[] passedMarkers)
     {
-        
+        _packColor = c;
+        _packNameText.text = packName;
+        _packNameText.color = c;
+
+        _categoryName = categoryName;
+
+        _completeMarkers = passedMarkers;
     }
 
-    public void CreateLevelButtons()
+    public void InitLevelButtons()
     {
-        int totalGroups = _nLevels / LEVELS_PER_PAGE;
-        //_levels = new LevelGroup[totalGroups];
+        int totalPages = _nLevels / LEVELS_PER_PAGE;
+        _levels = new LevelPage[totalPages];
 
-        for (int i = 0; i < totalGroups; i++)
+        LevelPage page;
+        for (int i = 0; i < totalPages; i++)
         {
-            //group = Instantiate(_levelGroupPrefab, _levelLayout.transform);
-            //group.SetLevelSelection(this);
-            //group.SetButtonColor(_lotColor);
-            //group.SetButtonNumbers(1 + LEVELS_PER_GROUP * i, _completedLevelsMarkers);
+            page = Instantiate(_levelPagePrefab, _horizontalLayout.transform);
+            page.Init(_packColor, 1 + LEVELS_PER_PAGE * i, _completeMarkers, this);
 
-            //_levels[i] = group;
+            _levels[i] = page;
         }
     }
 
@@ -44,10 +50,19 @@ public class LevelSelect : MonoBehaviour
 
         for (int i = 0; i < totalGroups; i++)
         {
-            //if (_levels[i].gameObject != null)
-            //Destroy(_levels[i].gameObject);
+            if (_levels[i].gameObject != null)
+                Destroy(_levels[i].gameObject);
         }
 
-        //_levels = null;
+        _levels = null;
+    }
+
+    public void LoadLevel(int level)
+    {
+        //GameManager.GetInstance().SetLevel(level - 1);
+        //GameManager.GetInstance().SetCategory(_categoryName);
+        //GameManager.GetInstance().SetPack(_packNameText.text);
+
+        GameManager.GetInstance().LoadLevelScene();
     }
 }

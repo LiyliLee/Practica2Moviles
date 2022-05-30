@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5e94b2e7b0c51a45ac58f9e98c3a6f4, type: 3}
-  m_Name: 7x7 manias
+  m_Name: 7x7 Manias
   m_EditorClassIdentifier: 
   levels: {fileID: 4900000, guid: 0313700b86ba2bf43b5f3d24345be927, type: 3}
   packName: 7x7 Manias

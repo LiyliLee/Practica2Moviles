@@ -12,19 +12,22 @@ public class PackSelect : MonoBehaviour
 
     private LevelSelect _levelSelect;
     private string _category;
+    private PlayerData.PassedLevelInfo[] _passedLevels;
 
-    // Start is called before the first frame update
-    public void Start()
-    {
-    }
-
-    public void SetPack(string categoryName, string packName, Color c)
+    public void SetPack(string categoryName, string packName, Color c, PlayerData.PassedLevelInfo[] passedInfo)
     {
         _category = categoryName;
         _packName.text = packName;
         _packName.color = c;
+        _passedLevels = passedInfo;
 
-        _completeLevel.text = 0.ToString() + "/" + 150.ToString();
+        int passed = 0;
+        for(int i = 0; i < _passedLevels.Length; i++)
+        {
+            if (_passedLevels[i] != 0)
+                passed++;
+        }
+        _completeLevel.text = passed.ToString() + "/" + _passedLevels.Length.ToString();
     }
 
     public void SetCallback(LevelSelect ls)
@@ -36,6 +39,7 @@ public class PackSelect : MonoBehaviour
     private void ButtonCallback()
     {
         _levelSelect.gameObject.SetActive(true);
-        _levelSelect.CreateLevelButtons();
+        _levelSelect.SetPackData(_packName.color, _packName.text, _category, _passedLevels);
+        _levelSelect.InitLevelButtons();
     }
 }

@@ -8,27 +8,31 @@ public class MenuManager : MonoBehaviour
     public RectTransform _scrollContent = null;
     public VerticalLayoutGroup _packLayout= null;
     public GameObject _packPanel = null;
-    //public LevelSelection _levelSelectionPanel = null;
+    public LevelSelect _levelSelectionPanel = null;
 
     public GameObject _categoryUIPrefab = null;
 
+    private CategoryLevel _currentCategory;
+    private PackLevel _currentPack;
     private CategoryLevel[] _levelCategories;
+    private Dictionary<string, PlayerData.PassedLevelInfo[]> _passedInfo;
 
-    // Start is called before the first frame update
-    void Start()
+    public void Init(CategoryLevel currentCategory, PackLevel currentPack, CategoryLevel[] categoryLevels, Dictionary<string, PlayerData.PassedLevelInfo[]> completionInfo)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Init(CategoryLevel[] categoryLevels)
-    {
+        _currentCategory = currentCategory;
+        _currentPack = currentPack;
         _levelCategories = categoryLevels;
+        _passedInfo = completionInfo;
+
+        if (GameManager.GetInstance().FromLevelScene())
+        {
+            _packPanel.SetActive(true);
+
+            _levelSelectionPanel.gameObject.SetActive(true);
+            _levelSelectionPanel.SetPackData(_currentCategory.color, _currentPack.name,
+                _currentCategory.name, _passedInfo[_currentPack.name]);
+            _levelSelectionPanel.InitLevelButtons();
+        }
 
         CreateCategoryObjects();
     }
@@ -51,8 +55,8 @@ public class MenuManager : MonoBehaviour
             CategoryLevel cl = _levelCategories[i];
             CategoryTitle category = button.GetComponent<CategoryTitle>();
 
-            category.Init(cl.color, cl.name);
-            category.SetPacks(cl, _packLayout);
+            category.Init(cl.color, cl.name, _levelSelectionPanel);
+            category.SetPacks(cl, _packLayout, _passedInfo);
         }
     }
 }

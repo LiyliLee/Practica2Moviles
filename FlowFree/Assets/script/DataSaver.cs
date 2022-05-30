@@ -7,19 +7,24 @@ using UnityEngine;
 [System.Serializable]
 public struct PlayerData
 {
-    public int level_;
-    public Dictionary<string, int[]> completedLotLevel_;
-    public int hints_;
-    public bool premium_;
+    public enum PassedLevelInfo { NO, PASSED, PERFECT };
 
-    public PlayerData(int level, Dictionary<string, int[]> completed, int hints, bool premium)
+    public int _level;
+    public Dictionary<string, PassedLevelInfo[]> _passedLevelInfo; // niveles completados por pack
+    public Dictionary<string, int[]> _moves; // numero de movimientos por nivel
+    public int _hints; // numero de pistas
+    public bool _premium; // usuario sin anuncios
+
+    public PlayerData(int level, Dictionary<string, PassedLevelInfo[]> passed, Dictionary<string, int[]> moves, int hints, bool premium)
     {
-        level_ = level;
-        completedLotLevel_ = completed;
-        hints_ = hints;
-        premium_ = premium;
+        _level = level;
+        _passedLevelInfo = passed;
+        _moves = moves;
+        _hints = hints;
+        _premium = premium;
     }
 }
+
 
 public class DataSaver
 {
@@ -36,16 +41,16 @@ public class DataSaver
 
     public static PlayerData ResetData(List<string> packs)
     {
-        Dictionary<string, int[]> completed = new Dictionary<string, int[]>();
+        Dictionary<string, PlayerData.PassedLevelInfo[]> completed = new Dictionary<string, PlayerData.PassedLevelInfo[]>();
+        Dictionary<string, int[]> moves = new Dictionary<string, int[]>();
 
-        for(int i = 0; i < packs.Count; i++)
+        for (int i = 0; i < packs.Count; i++)
         {
-            int[] levels = new int[150];
-
-            completed.Add(packs[i], levels);
+            completed.Add(packs[i], new PlayerData.PassedLevelInfo[150]);
+            moves.Add(packs[i], new int[150]);
         }
 
-        return new PlayerData(0, completed, 0, false);
+        return new PlayerData(0, completed, moves, 0, false);
 
     }
     public static PlayerData LoadPlayerData(List<string> packs)
@@ -57,6 +62,23 @@ public class DataSaver
             FileStream file = File.Open(Application.persistentDataPath + "/flowFreeData.dat", FileMode.Open);
 
             PlayerData playerData = (PlayerData)bf.Deserialize(file);
+
+            file.Close();
+
+            if (playerData._passedLevelInfo == null || playerData._moves == null)
+            {
+                if (playerData._passedLevelInfo == null)
+                    playerData._passedLevelInfo = new Dictionary<string, PlayerData.PassedLevelInfo[]>();
+
+                if (playerData._moves == null)
+                    playerData._moves = new Dictionary<string, int[]>();
+
+                for(int i = 0; i < packs.Count; i++)
+                {
+                    playerData._passedLevelInfo.Add(packs[i], new PlayerData.PassedLevelInfo[150]);
+                    playerData._moves.Add(packs[i], new int[150]);
+                }
+            }
 
             return playerData;
         }
