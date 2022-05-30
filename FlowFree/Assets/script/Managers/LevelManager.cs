@@ -152,6 +152,7 @@ public class LevelManager : MonoBehaviour
         SetHintText();
         categoryColor_ = categoryColor;
         SetLevelText(level, levelData_.width, levelData_.height, categoryColor_);
+        marker.SetSprite(GameManager.GetInstance().GetPassedLevelInfo());
     }
 
     public void Win()
@@ -159,7 +160,8 @@ public class LevelManager : MonoBehaviour
         finishPanel_.SetActive(true);
         finishPanel_.GetComponent<FinishPanel>().SetFinishPanel(GetSteps() == levelData_.numFlows, GetSteps());
         canPlay_ = false;
-        GameManager.GetInstance().SetLevelMoves();
+        GameManager.GetInstance().SaveLevel();
+        marker.SetSprite(GameManager.GetInstance().GetPassedLevelInfo());
     }
 
     public void SetPlay(bool aux)
@@ -273,6 +275,11 @@ public class LevelManager : MonoBehaviour
         hintNums_ += aux;
     }
 
+    public LevelData GetLevelData()
+    {
+        return levelData_;
+    }
+
     #endregion
 
     LevelData levelData_;
@@ -297,5 +304,6 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI movesText;
     public TextMeshProUGUI pipeText;
     public TextMeshProUGUI hintText;
+    public CompletedMarker marker;
 
 }
