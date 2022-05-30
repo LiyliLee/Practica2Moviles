@@ -2225,6 +2225,7 @@ GameObject:
   - component: {fileID: 879261098}
   - component: {fileID: 879261100}
   - component: {fileID: 879261099}
+  - component: {fileID: 879261101}
   m_Layer: 5
   m_Name: Completed
   m_TagString: Untagged
@@ -2289,6 +2290,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879261097}
   m_CullTransparentMesh: 1
+--- !u!114 &879261101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879261097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878503324f089364dbe40307c8d29bba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 879261099}
+  completed: {fileID: 21300000, guid: f58ee836b5a777646b3c61cf5254e2ad, type: 3}
+  perfect: {fileID: 21300000, guid: 02d495874699ada48b30a48c704695ea, type: 3}
 --- !u!1 &892627143
 GameObject:
   m_ObjectHideFlags: 0
@@ -4316,6 +4332,7 @@ MonoBehaviour:
   movesText: {fileID: 291013080}
   pipeText: {fileID: 1120699852}
   hintText: {fileID: 1691246818}
+  marker: {fileID: 879261101}
 --- !u!4 &1784959946
 Transform:
   m_ObjectHideFlags: 0

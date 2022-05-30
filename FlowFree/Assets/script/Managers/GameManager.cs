@@ -203,6 +203,25 @@ public class GameManager : MonoBehaviour
         return _player._hints;
     }
 
+    public PlayerData.PassedLevelInfo GetPassedLevelInfo()
+    {
+        return _player._passedLevelInfo[GetPack().packName][levelToPlay];
+    }
+
+    public void SetPassedLevelInfo()
+    {
+        if (levelManager.GetSteps() == levelManager.GetLevelData().numFlows)
+            _player._passedLevelInfo[GetPack().packName][levelToPlay] = PlayerData.PassedLevelInfo.PERFECT;
+        else _player._passedLevelInfo[GetPack().packName][levelToPlay] = PlayerData.PassedLevelInfo.PASSED;
+    }
+
+    public void SaveLevel()
+    {
+        SetPassedLevelInfo();
+        SetLevelMoves();
+        DataSaver.SavePlayerData(_player);
+    }
+
     public void LoadLevelScene()
     {
         SceneManager.LoadScene(_levelSceneName);
