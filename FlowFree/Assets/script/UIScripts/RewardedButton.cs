@@ -52,7 +52,7 @@ public class RewardedButton : MonoBehaviour, IUnityAdsListener
     {
         if (showResult == ShowResult.Finished)
         {
-            GameManager._instance.AddHint();
+            GameManager.GetInstance().AddHint();
         }
         else
         {

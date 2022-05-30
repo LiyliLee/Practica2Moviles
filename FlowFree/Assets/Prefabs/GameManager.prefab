@@ -43,9 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984a2bba9675307439bd16236a23418d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menuManager: {fileID: 0}
   levelManager: {fileID: 0}
   gridManager: {fileID: 0}
-  categories_:
+  _categories:
   - {fileID: 11400000, guid: a502acdef7b822645b14a7b35d92483b, type: 2}
   - {fileID: 11400000, guid: 73a09aeae3351b3458bfa43879647ade, type: 2}
   - {fileID: 11400000, guid: 47d3ebccc06ade944af96dd17e131ac7, type: 2}
+  _menuSceneName: Menu
+  _levelSceneName: LevelScene
+  _categoryToPlay: 0

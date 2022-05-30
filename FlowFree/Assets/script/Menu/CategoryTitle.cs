@@ -15,27 +15,22 @@ public class CategoryTitle : MonoBehaviour
     private LevelSelect _levelSelectPanel;
 
 
-    public void Init(Color c, string name)
+    public void Init(Color c, string name, LevelSelect ls)
     {
         categoryName.text = name;
         background.color = new Color(c.r,c.g,c.b ,0.5f);
         line.color = c;
-    }
-
-    public void SetLevelPanel(LevelSelect ls)
-    {
         _levelSelectPanel = ls;
     }
 
-    public void SetPacks(CategoryLevel category, VerticalLayoutGroup verticalLayout)
+    public void SetPacks(CategoryLevel category, VerticalLayoutGroup verticalLayout, Dictionary<string, PlayerData.PassedLevelInfo[]> passedInfo)
     {
         PackSelect pack;
 
         for(int i = 0; i < category.packs.Length; i++)
         {
-            Debug.Log("Setting up LevelPacket Button");
             pack = Instantiate(_packSelectPrefab, verticalLayout.transform);
-            pack.SetPack(category.categoryName, category.packs[i].name, category.color);
+            pack.SetPack(category.categoryName, category.packs[i].name, category.color, passedInfo[category.packs[i].name]);
             pack.SetCallback(_levelSelectPanel);
         }
     }

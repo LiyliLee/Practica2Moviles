@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,49 +12,58 @@ public class GameManager : MonoBehaviour
     public LevelManager levelManager;
     public GridManager gridManager;
 
-    public CategoryLevel[] categories_;
+    public CategoryLevel[] _categories;
+
+    public string _menuSceneName = "Menu";
+    public string _levelSceneName = "LevelScene";
 
     [SerializeField]
-    private int categoryToPlay;
-    private int packToPlay;
-    private int levelToPlay;
-    private int[][] packLevelsUnlocked;
+    private int _categoryToPlay;
+    private int _packToPlay;
+    private PackLevel _levelPack;
+    private int _levelToPlay;
 
-    private PlayerData player_;
+    private PlayerData _player;
+    private bool _fromLevelScene = false;
 
-    public static GameManager _instance;
+    // Singleton
+    private static GameManager _instance;
 
     void Awake()
     {
-        if (_instance != null)
-        {
-            gridManager.CreateLevel(levelManager.CreateLevel(categories_[categoryToPlay].packs[packToPlay].levels, levelToPlay));
-
-            DestroyImmediate(gameObject);
-            return;
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
 
-            /*List<string> packNames = new List<string>();
+            List<string> packNames = new List<string>();
 
-            for(int i = 0; i < categories_.Length; i++)
+            for (int i = 0; i < _categories.Length; i++)
             {
-                foreach(PackLevel pack in categories_[i].packs)
+                foreach (PackLevel pack in _categories[i].packs)
                 {
                     packNames.Add(pack.packName);
                 }
             }
 
-            player_ = DataSaver.LoadPlayerData(packNames);
+            _player = DataSaver.LoadPlayerData(packNames);
 
-            levelManager.SetLevel(categories_[0].packs[0].levels, 2);*/
-
-            SetupScene();
+            _instance.CreateScene();
 
             DontDestroyOnLoad(gameObject);
         }
+
+        else if (_instance != this)
+        {
+            _instance.levelManager = levelManager;
+            _instance._menuManager = _menuManager;
+            _instance.gridManager = gridManager;
+
+            gridManager.CreateLevel(levelManager.CreateLevel(_categories[_categoryToPlay].packs[_packToPlay].levels, _levelToPlay));
+
+            DestroyImmediate(gameObject);
+            return;
+        }
+
     }
 
     public static GameManager GetInstance()
@@ -61,41 +71,85 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
-    public void ProcessInput(InputManager.MoveType move, Vector2 pos)
-    {
-        //grid_.ProcessInput(move, pos);
-    }
-
-    public CategoryLevel[] GetCategories() { return categories_; }
-    public int GetPackUnlockeds(int catid, int packid) { return packLevelsUnlocked[catid][packid]; }
-
-    private void OnApplicationQuit()
-    {
-        DataSaver.SavePlayerData(player_);
-    }
-
-    public PlayerData GetPlayerData() {
-        return GetInstance().player_;
-    }
-
-    public void AddHint()
-    {
-
-    }
-
-    
-    private void SetupScene()
+    private void CreateScene()
     {
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(categories_[0].packs[0].levels, 2);
+            _instance.levelManager.SetLevel(_categories[0].packs[0].levels, 2);
 
         }
         else if (_instance._menuManager != null)
         {
             // se carga menu
-            _instance._menuManager.Init(categories_);
+            _instance._menuManager.Init(_categories[_categoryToPlay], _levelPack, _categories, _player._passedLevelInfo);
+        }
+    }
+
+    public PlayerData GetPlayerData() {
+        return _instance._player;
+    }
+
+    public void AddHint()
+    {
+        _player._hints++;
+    }
+
+    public void DecreaseHint()
+    {
+        _player._hints--;
+    }   
+
+    public void LoadLevelScene()
+    {
+        Debug.Log("Loading Level");
+        SceneManager.LoadScene(_levelSceneName);
+    }
+
+    public void LoadMenu()
+    {
+        _fromLevelScene = true;
+        SceneManager.LoadScene(_menuSceneName);
+    }
+
+    public void LoadNextLevel()
+    {
+        if(_levelToPlay < 149)
+        {
+            _levelToPlay += 1;
+            LoadLevelScene();
+        }
+    }
+
+    public void LoadPreviousLevel()
+    {
+        if (_levelToPlay > 0)
+        {
+            _levelToPlay -= 1;
+            LoadLevelScene();
+        }
+    }
+
+    public bool FromLevelScene()
+    {
+        if (_fromLevelScene)
+        {
+            _fromLevelScene = false;
+            return true;
+        }
+        else return false;
+    }
+
+    private void OnApplicationQuit()
+    {
+        DataSaver.SavePlayerData(_player);
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus)
+        {
+            DataSaver.SavePlayerData(_player);
         }
     }
 }
