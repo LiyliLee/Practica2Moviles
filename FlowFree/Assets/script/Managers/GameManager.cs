@@ -174,6 +174,7 @@ public class GameManager : MonoBehaviour
     public void AddHint()
     {
         _player._hints++;
+        levelManager.SetHintText();
     }
 
     public void DecreaseHint()

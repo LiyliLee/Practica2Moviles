@@ -112,7 +112,7 @@ public class LevelManager : MonoBehaviour
 
     public void UseHint()
     {
-        if (GameManager.GetInstance().GetHints() > 0)
+        if (GameManager.GetInstance().GetHints() > 0 && canPlay_)
         {
             gridManager.UseHint();
             GameManager.GetInstance().DecreaseHint();
