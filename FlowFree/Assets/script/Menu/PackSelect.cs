@@ -32,12 +32,14 @@ public class PackSelect : MonoBehaviour
 
     public void SetCallback(LevelSelect ls)
     {
+        // añade una funcion al callback del boton
         _levelSelect = ls;
         _button.onClick.AddListener(ButtonCallback);
     }
 
     private void ButtonCallback()
     {
+        // Funcion que se debe relaizar cuando el boton sea pulsado
         _levelSelect.gameObject.SetActive(true);
         _levelSelect.SetPackData(_packName.color, _packName.text, _category, _passedLevels);
         _levelSelect.InitLevelButtons();

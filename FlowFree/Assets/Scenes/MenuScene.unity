@@ -300,6 +300,10 @@ PrefabInstance:
       propertyPath: _menuManager
       value: 
       objectReference: {fileID: 2055076016}
+    - target: {fileID: 6008392620751290245, guid: 5f64f4155c8397f4e87f16b99d0408e1, type: 3}
+      propertyPath: _menuSceneName
+      value: MenuScene
+      objectReference: {fileID: 0}
     - target: {fileID: 6008392620751290246, guid: 5f64f4155c8397f4e87f16b99d0408e1, type: 3}
       propertyPath: m_RootOrder
       value: 4

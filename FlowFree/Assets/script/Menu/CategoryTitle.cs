@@ -17,6 +17,7 @@ public class CategoryTitle : MonoBehaviour
 
     public void Init(Color c, string name, LevelSelect ls)
     {
+        // Inicializa el nombre de cada categoria
         categoryName.text = name;
         background.color = new Color(c.r,c.g,c.b ,0.5f);
         line.color = c;
@@ -25,6 +26,7 @@ public class CategoryTitle : MonoBehaviour
 
     public void SetPacks(CategoryLevel category, VerticalLayoutGroup verticalLayout, Dictionary<string, PlayerData.PassedLevelInfo[]> passedInfo)
     {
+        // inicializa los packs dentro de cada categoria
         PackSelect pack;
 
         for(int i = 0; i < category.packs.Length; i++)

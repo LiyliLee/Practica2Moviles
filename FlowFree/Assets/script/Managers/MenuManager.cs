@@ -26,6 +26,7 @@ public class MenuManager : MonoBehaviour
 
         if (GameManager.GetInstance().FromLevelScene())
         {
+            // si venimos de la escena del juego activa el panel de seleccion de nivel
             _packPanel.SetActive(true);
 
             _levelSelectionPanel.gameObject.SetActive(true);
@@ -39,6 +40,7 @@ public class MenuManager : MonoBehaviour
 
     private void CreateCategoryObjects()
     {
+        // crea las categorias con sus respectivos packs
         int nCategories = _levelCategories.Length;
 
         CreateButtons(nCategories);
@@ -46,6 +48,7 @@ public class MenuManager : MonoBehaviour
 
     private void CreateButtons(int nButtons)
     {
+        // crea los botones de cada uno de los packs de niveles
         GameObject button;
 
         for(int i = 0; i < nButtons; i++)

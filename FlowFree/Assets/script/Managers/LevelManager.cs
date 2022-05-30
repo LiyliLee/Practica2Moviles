@@ -115,22 +115,22 @@ public class LevelManager : MonoBehaviour
 
     public void NextLevel()
     {
-
+        GameManager.GetInstance().LoadNextLevel();
     }
 
     public void PrevLevel()
     {
-
+        GameManager.GetInstance().LoadPreviousLevel();
     }
 
     public void ResetLevel()
     {
-        
+        GameManager.GetInstance().LoadLevelScene();
     }
 
     public void BackToMenu()
     {
-
+        GameManager.GetInstance().LoadMenu();
     }
 
     public void SetLevel(TextAsset pack, int level, Color categoryColor)
@@ -146,7 +146,7 @@ public class LevelManager : MonoBehaviour
         SetMovesText(levelData_.numFlows);
         SetHintText();
         categoryColor_ = categoryColor;
-        SetLevelText(level, levelData_.width, levelData_.height, categoryColor_);
+        SetLevelText(level + 1, levelData_.width, levelData_.height, categoryColor_);
     }
 
     public void Win()

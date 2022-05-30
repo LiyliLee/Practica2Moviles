@@ -14,13 +14,12 @@ public class GameManager : MonoBehaviour
 
     public CategoryLevel[] _categories;
 
-    public string _menuSceneName = "Menu";
+    public string _menuSceneName = "MenuScene";
     public string _levelSceneName = "LevelScene";
 
     [SerializeField]
     private int _categoryToPlay;
     private int _packToPlay;
-    private PackLevel _levelPack;
     private int _levelToPlay;
 
     private PlayerData _player;
@@ -57,10 +56,9 @@ public class GameManager : MonoBehaviour
             _instance._menuManager = _menuManager;
             _instance.gridManager = gridManager;
 
-            gridManager.CreateLevel(levelManager.CreateLevel(_categories[_categoryToPlay].packs[_packToPlay].levels, _levelToPlay));
+            _instance.CreateScene();
 
             DestroyImmediate(gameObject);
-            return;
         }
 
     }
@@ -75,13 +73,15 @@ public class GameManager : MonoBehaviour
         if (_instance.levelManager != null)
         {
             // se carga nivel
-            levelManager.SetLevel(_categories[2].packs[2].levels, 5, _categories[2].color);
+            levelManager.SetLevel(_categories[_categoryToPlay].packs[_packToPlay].levels,
+                _levelToPlay, _categories[_categoryToPlay].color);
 
         }
         else if (_instance._menuManager != null)
         {
             // se carga menu
-            _instance._menuManager.Init(_categories[_categoryToPlay], _levelPack, _categories, _player._passedLevelInfo);
+            _instance._menuManager.Init(_categories[_categoryToPlay], _categories[_categoryToPlay].packs[_packToPlay],
+                _categories, _player._passedLevelInfo);
         }
     }
 
@@ -97,11 +97,27 @@ public class GameManager : MonoBehaviour
     public void DecreaseHint()
     {
         _player._hints--;
-    }   
+    }
+
+    public void SelectedLevelInfo(string categoryToPlay, string packToPlay, int levelToPlay)
+    {
+        for (int i = 0; i < _categories.Length; i++)
+        {
+            if (_categories[i].name == categoryToPlay)
+            {
+                _categoryToPlay = i;
+                for (int j = 0; j < _categories[i].packs.Length; j++)
+                {
+                    if (_categories[i].packs[j].packName == packToPlay)
+                        _packToPlay = j;
+                }
+            }
+            _levelToPlay = levelToPlay;
+        }
+    }
 
     public void LoadLevelScene()
     {
-        Debug.Log("Loading Level");
         SceneManager.LoadScene(_levelSceneName);
     }
 
