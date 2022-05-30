@@ -66,6 +66,6 @@ public class LevelSelect : MonoBehaviour
     {
         // Carga el nivel seleccionado
         GameManager.GetInstance().SelectedLevelInfo(_categoryName, _packNameText.text, level - 1);
-        GameManager.GetInstance().LoadLevelScene();
+        GameManager.GetInstance().ToLevelScene();
     }
 }

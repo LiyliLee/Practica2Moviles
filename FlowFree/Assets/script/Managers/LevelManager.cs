@@ -25,7 +25,8 @@ public class LevelManager : MonoBehaviour
         string packText = pack.text;
 
         string[] levels = packText.Split('\n');
-        GameManager.GetInstance().SetLevelsInPack(levels.Length);
+        // tiene una linea vacia al final del archivo
+        GameManager.GetInstance().SetLevelsInPack(levels.Length - 1);
 
         string[] level = levels[levelToPlay].Split(';');
         string[] cabecera = level[0].Split(',');
@@ -151,7 +152,7 @@ public class LevelManager : MonoBehaviour
         SetMovesText();
         SetHintText();
         categoryColor_ = categoryColor;
-        SetLevelText(level, levelData_.width, levelData_.height, categoryColor_);
+        SetLevelText(level + 1, levelData_.width, levelData_.height, categoryColor_);
         marker.SetSprite(GameManager.GetInstance().GetPassedLevelInfo());
     }
 
