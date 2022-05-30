@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
             }
 
             _player = DataSaver.LoadPlayerData(packNames);
-            levelManager.SetLevel(_categories[2].packs[2].levels, 5, _categories[2].color);
+            _instance.SetupScene();
 
             DontDestroyOnLoad(gameObject);
         }
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
             _instance._menuManager = _menuManager;
             _instance.gridManager = gridManager;
 
-            _instance.CreateScene();
+            _instance.SetupScene();
 
             DestroyImmediate(gameObject);
         }
