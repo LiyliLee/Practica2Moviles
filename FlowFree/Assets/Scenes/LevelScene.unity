@@ -2614,19 +2614,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1013746299}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1454912216}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1013746299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3653,8 +3641,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0266fd4e39610e4c9807bbfc279d9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twitterNameParamter: Este juego es lo mejor que me ha pasado en la vida.
-  LINK_GAME: https://freesstylers.github.io/District-Dance-Battle/
 --- !u!1 &1425021429
 GameObject:
   m_ObjectHideFlags: 0
@@ -3787,11 +3773,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425021429}
   m_CullTransparentMesh: 1
---- !u!1 &1454912216 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6008392620751290244, guid: 5f64f4155c8397f4e87f16b99d0408e1, type: 3}
-  m_PrefabInstance: {fileID: 6008392620773639100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1463430197
 GameObject:
   m_ObjectHideFlags: 0
@@ -4974,6 +4955,7 @@ GameObject:
   - component: {fileID: 2084233424}
   - component: {fileID: 2084233423}
   - component: {fileID: 2084233422}
+  - component: {fileID: 2084233425}
   m_Layer: 5
   m_Name: Next Level
   m_TagString: Untagged
@@ -5058,6 +5040,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2084233425}
+        m_TargetAssemblyTypeName: ShowAdButton, Assembly-CSharp
+        m_MethodName: ShowAd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2084233423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5096,6 +5090,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084233420}
   m_CullTransparentMesh: 1
+--- !u!114 &2084233425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084233420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3752d501f338e474797d1855470a0145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6008392620773639100
 PrefabInstance:
   m_ObjectHideFlags: 0
